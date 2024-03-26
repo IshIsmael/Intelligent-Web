@@ -9,6 +9,11 @@ var debug = require('debug')('assignment:server');
 var http = require('http');
 
 /**
+ * Added database connection
+ */
+
+var database = require('../databases/plantSighting');
+/**
  * Get port from environment and store in Express.
  */
 
