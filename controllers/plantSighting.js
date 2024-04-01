@@ -2,7 +2,7 @@ const PlantSighting = require('../models/plantSighting');
 exports.createSighting = async (req, res) => {
     // Handles the case where no image is uploaded
     try {
-        const { dateSeen, commonName, scientificName, description, dbPediaUri, status, sunExposure, flowerColor, plantLength, plantHeight, plantSpread } = req.body;
+        const { dateSeen, commonName, scientificName, description, dbPediaUri, status, userNickname, sunExposure, flowerColor, plantLength, plantHeight, plantSpread } = req.body;
         
         let imagePath;
         if (req.file) {
@@ -26,6 +26,7 @@ exports.createSighting = async (req, res) => {
         // Create a new PlantSighting object
         const newSighting = new PlantSighting({
             dateSeen: new Date(dateSeen),
+            userNickname,
             location: {
                 type: "Point",
                 coordinates: [parseFloat(longitude), parseFloat(latitude)]

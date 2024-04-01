@@ -7,7 +7,7 @@ const plantSightingSchema = new Schema({
     identification: {
         commonName: { type: String },
         scientificName: { type: String },
-        descriptions: { type: String, required: true },
+        description: { type: String, required: true },
         dbPediaUri: { type: String },
         photo: { type: String },
         confirmation: { type: String, enum: ['Verified', 'Pending Confirmation'] },   
@@ -19,10 +19,11 @@ const plantSightingSchema = new Schema({
     plantCharacteristics: {
         plantHeight: { type: Number, required: true },
         plantSpread: { type: Number, required: true },
+        plantLength: { type: Number, required: true },
         hasFlowers: { type: Boolean, required: true },
-        hasFruitsorSeeds: { type: Boolean, required: true },
+        hasFruitsOrSeeds: { type: Boolean, required: true },
         hasLeaves: { type: Boolean, required: true },
-        sunExposure: { type: String, enum: ['Full Sun', 'Partial Sun', 'Full Shade'], required: true },
+        sunExposure: { type: String, enum: ['full sun', 'partial shade', 'full shade'], required: true },
     },
     comments: [
         {
