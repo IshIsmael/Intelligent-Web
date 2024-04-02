@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+<div class="wrapper">
+  <%- include('./partials/header.ejs'); -%>
+</div>
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
@@ -8,4 +11,9 @@
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
   </body>
+
+
+<div class="wrapper">
+  <%- include('./partials/footer.ejs'); -%>
+</div>
 </html>

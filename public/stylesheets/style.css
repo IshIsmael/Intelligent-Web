@@ -40,3 +40,27 @@ input[type="submit"]:hover {
     max-height: 200px; /* Adjust this to change sizing */
     display: none; /* Keeps the element hidden until an image is loaded */
 }
+
+.The-Main-header {
+    text-autospace: initial;
+}
+.The-Main-header ul {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    width: 90%;
+    padding: 5% 5%;
+
+}
+.The-Main-header ul li{
+    display: block;
+    list-style-type: none;
+}
+
+#main-footer {
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+#company-name {
+    text-align: center;
+}
