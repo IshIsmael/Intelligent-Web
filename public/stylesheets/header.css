@@ -1,0 +1,28 @@
+#main-header {
+  background-color: var(--main-color);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: white;
+}
+
+#navigation-menu {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+#company-name {
+  padding: 20px;
+}
+
+.navigation-link {
+  color: white;
+  text-decoration: none;
+  padding: 20px;
+}
+
+.navigation-link:hover {
+  background-color: var(--accent-color);
+  color: black;
+}

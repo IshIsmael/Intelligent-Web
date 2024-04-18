@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
-<div class="wrapper">
-  <%- include('./partials/header.ejs'); -%>
-</div>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
+  <!-- Header -->
+  <%- include('./partials/header.ejs'); -%>
+
+  <!-- Main Content -->
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <main>
+      <h1><%= title %></h1>
+      <p>Welcome to <%= title %></p>
+    </main>
   </body>
 
-
-<div class="wrapper">
+  <!-- Footer -->
   <%- include('./partials/footer.ejs'); -%>
-</div>
 </html>
