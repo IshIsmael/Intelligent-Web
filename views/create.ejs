@@ -14,6 +14,7 @@
     ></script>
     <script defer src="/javascripts/script.js"></script>
     <script defer src="/javascripts/map.js"></script>
+    <script defer src="/javascripts/autocap.js"></script>
   </head>
   <%- include('./partials/header.ejs'); -%>
   <body>
@@ -66,10 +67,10 @@
         />
 
         <label for="commonName">Common Name:</label>
-        <input type="text" id="commonName" name="commonName" required />
+        <input type="text" id="commonName" name="commonName" oninput="autocap(this)" required />
 
         <label for="scientificName">Scientific Name:</label>
-        <input type="text" id="scientificName" name="scientificName" required />
+        <input type="text" id="scientificName" name="scientificName" oninput="autocap(this)" required />
 
         <label for="description">Description:</label>
         <input type="text" id="description" name="description" required />
@@ -102,7 +103,7 @@
         />
 
         <label for="flowerColor">Flower Colour:</label>
-        <input type="text" id="flowerColor" name="flowerColor" required />
+        <input type="text" id="flowerColor" name="flowerColor" oninput="autocap(this)" required />
 
         <label for="sunExposure">Sun Exposure:</label>
         <select id="sunExposure" name="sunExposure" required>
