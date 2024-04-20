@@ -19,125 +19,129 @@
   <%- include('./partials/header.ejs'); -%>
   <body>
     <main>
-      <form
-        action="/submit-plant-sighting"
-        method="post"
-        enctype="multipart/form-data"
-      >
-        <h1>Add a Plant Sighting</h1>
+      <div id="checkNickname">
+        <form
+          action="/submit-plant-sighting"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <h1>Add a Plant Sighting</h1>
 
-        <label for="dateSeen">Date Seen:</label>
-        <input type="datetime-local" id="dateSeen" name="dateSeen" required />
+          <label for="dateSeen">Date Seen:</label>
+          <input type="datetime-local" id="dateSeen" name="dateSeen" required />
 
-        <div id="mapid" style="height: 180px"></div>
-        <!-- contains the map -->
+          <div id="mapid" style="height: 180px"></div>
+          <!-- contains the map -->
 
-        <label for="userNickname">Nickname:</label>
-        <input type="text" id="userNickname" name="userNickname" required />
+          <label for="userNickname">Nickname:</label>
+          <button id="fillUserNickname">Use Pre-exisitng Nickname </button>
+          <input type="text" id="userNickname" name="userNickname" required />
 
-        <label for="image">Image:</label>
-        <input
-          type="file"
-          id="image"
-          name="image"
-          accept="image/*"
-          onchange="previewImage(event)"
-        />
-        <img
-          id="imagePreview"
-          src="#"
-          alt="Image preview..."
-          style="display: none"
-        />
+          <label for="image">Image:</label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            accept="image/*"
+            onchange="previewImage(event)"
+          />
+          <img
+            id="imagePreview"
+            src="#"
+            alt="Image preview..."
+            style="display: none"
+          />
 
-        <input
-          type="hidden"
-          id="latitude"
-          name="latitude"
-          step="any"
-          required
-        />
+          <input
+            type="hidden"
+            id="latitude"
+            name="latitude"
+            step="any"
+            required
+          />
 
-        <input
-          type="hidden"
-          id="longitude"
-          name="longitude"
-          step="any"
-          required
-        />
+          <input
+            type="hidden"
+            id="longitude"
+            name="longitude"
+            step="any"
+            required
+          />
 
-        <label for="commonName">Common Name:</label>
-        <input type="text" id="commonName" name="commonName" oninput="autocap(this)" required />
+          <label for="commonName">Common Name:</label>
+          <input type="text" id="commonName" name="commonName" oninput="autocap(this)" required />
 
-        <label for="scientificName">Scientific Name:</label>
-        <input type="text" id="scientificName" name="scientificName" oninput="autocap(this)" required />
+          <label for="scientificName">Scientific Name:</label>
+          <input type="text" id="scientificName" name="scientificName" oninput="autocap(this)" required />
 
-        <label for="description">Description:</label>
-        <input type="text" id="description" name="description" required />
+          <label for="description">Description:</label>
+          <input type="text" id="description" name="description" required />
 
-        <label for="plantLength">Plant Length (cm):</label>
-        <input
-          type="number"
-          id="plantLength"
-          name="plantLength"
-          step="0.01"
-          required
-        />
+          <label for="plantLength">Plant Length (cm):</label>
+          <input
+            type="number"
+            id="plantLength"
+            name="plantLength"
+            step="0.01"
+            required
+          />
 
-        <label for="plantHeight">Plant Height (cm):</label>
-        <input
-          type="number"
-          id="plantHeight"
-          name="plantHeight"
-          step="0.01"
-          required
-        />
+          <label for="plantHeight">Plant Height (cm):</label>
+          <input
+            type="number"
+            id="plantHeight"
+            name="plantHeight"
+            step="0.01"
+            required
+          />
 
-        <label for="plantSpread">Plant Spread (cm):</label>
-        <input
-          type="number"
-          id="plantSpread"
-          name="plantSpread"
-          step="0.01"
-          required
-        />
+          <label for="plantSpread">Plant Spread (cm):</label>
+          <input
+            type="number"
+            id="plantSpread"
+            name="plantSpread"
+            step="0.01"
+            required
+          />
 
-        <label for="flowerColor">Flower Colour:</label>
-        <input type="text" id="flowerColor" name="flowerColor" oninput="autocap(this)" required />
+          <label for="flowerColor">Flower Colour:</label>
+          <input type="text" id="flowerColor" name="flowerColor" oninput="autocap(this)" required />
 
-        <label for="sunExposure">Sun Exposure:</label>
-        <select id="sunExposure" name="sunExposure" required>
-          <option value="">--Select One--</option>
-          <option value="full sun">Full Sun</option>
-          <option value="partial shade">Partial Shade</option>
-          <option value="full shade">Full Shade</option>
-        </select>
+          <label for="sunExposure">Sun Exposure:</label>
+          <select id="sunExposure" name="sunExposure" required>
+            <option value="">--Select One--</option>
+            <option value="full sun">Full Sun</option>
+            <option value="partial shade">Partial Shade</option>
+            <option value="full shade">Full Shade</option>
+          </select>
 
-        <label for="hasFlowers">Has Flowers:</label>
-        <input type="checkbox" id="hasFlowers" name="hasFlowers" value="true" />
+          <label for="hasFlowers">Has Flowers:</label>
+          <input type="checkbox" id="hasFlowers" name="hasFlowers" value="true" />
 
-        <label for="hasLeaves">Has Leaves:</label>
-        <input type="checkbox" id="hasLeaves" name="hasLeaves" value="true" />
+          <label for="hasLeaves">Has Leaves:</label>
+          <input type="checkbox" id="hasLeaves" name="hasLeaves" value="true" />
 
-        <label for="hasFruitsOrSeeds">Has Fruits or Seeds:</label>
-        <input
-          type="checkbox"
-          id="hasFruitsOrSeeds"
-          name="hasFruitsOrSeeds"
-          value="true"
-        />
+          <label for="hasFruitsOrSeeds">Has Fruits or Seeds:</label>
+          <input
+            type="checkbox"
+            id="hasFruitsOrSeeds"
+            name="hasFruitsOrSeeds"
+            value="true"
+          />
 
-        <label for="dbPediaUri">DBPedia URI:</label>
-        <input type="text" id="dbPediaUri" name="dbPediaUri" required />
+          <label for="dbPediaUri">DBPedia URI:</label>
+          <input type="text" id="dbPediaUri" name="dbPediaUri" required />
 
-        <label for="status">Status:</label>
-        <select id="status" name="status" required>
-          <option value="Verified">Verified</option>
-          <option value="Pending Verification">Pending Verification</option>
-        </select>
+          <label for="status">Status:</label>
+          <select id="status" name="status" required>
+            <option value="Verified">Verified</option>
+            <option value="Pending Verification">Pending Verification</option>
+          </select>
 
-        <input type="submit" value="Add Sighting" id="addSighting"/>
-      </form>
+          <input type="submit" value="Add Sighting" id="addSighting"/>
+        </form>
+      </div>
+      <%- include('./partials/enter_nickname.ejs'); -%>
     </main>
   </body>
 

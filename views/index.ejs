@@ -11,8 +11,11 @@
   <!-- Main Content -->
   <body>
     <main>
-      <h1><%= title %></h1>
-      <p>Welcome to <%= title %></p>
+      <div id="checkNickname">
+        <h1><%= title %></h1>
+        <p>Welcome to <%= title %></p>
+      </div>
+      <%- include('./partials/enter_nickname.ejs'); -%>
     </main>
   </body>
 
