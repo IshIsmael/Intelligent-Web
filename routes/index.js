@@ -52,7 +52,7 @@ router.get('/forum',
 );
 
 // routes.js
-router.get('  /edit-plant-sighting/:id', plantSightingController.getEditPlantForm);
+router.get('/edit-plant-sighting/:id', plantSightingController.getEditPlantForm);
 router.post('/edit-plant-sighting/:id', plantSightingController.updatePlantSighting);
 
 
