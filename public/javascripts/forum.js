@@ -50,6 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
         filters += 'hasFruitsOrSeeds=true&';
       }
   
-      return filters.slice(0, -1); // Remove the trailing '&' character
+      return filters.slice(0, -1);
     }
   });
