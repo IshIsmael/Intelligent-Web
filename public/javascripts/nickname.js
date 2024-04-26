@@ -65,6 +65,9 @@ function checkIfEmpty() {
         document.getElementById('checkNickname').style.display = "block";
         console.log(value)
     }).catch((undefined) =>{
+        document.getElementById('EnterNickname').style.display = "block";
+        document.getElementById('checkNickname').style.display = "none";
+
         console.log(undefined)
     })
 }
