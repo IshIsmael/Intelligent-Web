@@ -10,6 +10,7 @@ self.addEventListener('install', (event) => {
                 '/javascripts/index.js',
                 '/javascripts/map.js',
                 '/javascripts/script.js',
+                '/javascripts/nickname.js',
                 '/stylesheets/footer.css',
                 '/stylesheets/form.css',
                 '/stylesheets/header.css',
