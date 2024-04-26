@@ -1,7 +1,8 @@
+// controllers/plantSighting.js
 const PlantSighting = require('../models/plantSighting');
 
 exports.createSighting = async (req, res) => {
-  // Handles the case where no image is uploaded
+  
   try {
     const {
       dateSeen,
@@ -9,7 +10,6 @@ exports.createSighting = async (req, res) => {
       scientificName,
       description,
       dbPediaUri,
-      status,
       userNickname,
       sunExposure,
       flowerColor,
@@ -18,24 +18,26 @@ exports.createSighting = async (req, res) => {
       plantSpread,
     } = req.body;
 
-    let imagePath;
+    // Sets the default status to Pending Confirmation
+    let confirmation = 'Pending Confirmation';
+
+    // If a DBPedia URI is provided it is autmoatically verified
+    if (dbPediaUri) {
+      confirmation = 'Verified';
+    }
+    // default for no image uploaded, else image uploaded name added to image path
+    //fixes issue with image not being retrieved from the databse
+    let imagePath = 'images/Logo.png';
     if (req.file) {
-      imagePath = req.file.path;
-    } else {
-      // For example, set a default image path or throw an error
-      imagePath = '../public/images/Logo.png'; // or set to null if your schema allows it
+      imagePath = 'images/uploads/' + req.file.filename;
     }
 
-    const hasFlowers = !!req.body.hasFlowers; // If checkbox is checked, req.body.hasFlowers will be true
+    const hasFlowers = !!req.body.hasFlowers;
     const hasLeaves = !!req.body.hasLeaves;
     const hasFruitsOrSeeds = !!req.body.hasFruitsOrSeeds;
     let { latitude, longitude } = req.body;
     latitude = parseFloat(latitude);
     longitude = parseFloat(longitude);
-    // Check if the coordinates are valid
-    if (isNaN(latitude) || isNaN(longitude)) {
-      return res.status(400).send('Invalid coordinates.');
-    }
 
     // Create a new PlantSighting object
     const newSighting = new PlantSighting({
@@ -51,7 +53,7 @@ exports.createSighting = async (req, res) => {
         description,
         dbPediaUri,
         photo: imagePath,
-        status,
+        confirmation,
       },
       plantCharacteristics: {
         hasFlowers: hasFlowers,
@@ -67,9 +69,108 @@ exports.createSighting = async (req, res) => {
     });
 
     await newSighting.save();
-    res.send('Plant Sighting added successfully!');
+    res.redirect('forum'); // later will add option to choose forum or plant info page
   } catch (error) {
     console.error(error);
     res.status(500).send('Error saving plant sighting to the database');
+  }
+};
+exports.listPlants = async (req, res) => {
+  let query = {};
+  // Sorting logic
+  let sortOption = {};
+  switch (req.query.sort) {
+      case 'newest':
+          sortOption = { 'dateSeen': -1 };
+          break;
+      case 'oldest':
+          sortOption = { 'dateSeen': 1 };
+          break;
+      default:
+          sortOption = { 'identification.commonName': 1 }; // Set it to default for convenience
+          break;
+  }
+
+  // Filtering logic
+  if (req.query.hasFlowers === 'true') {
+    query['plantCharacteristics.hasFlowers'] = true;
+  }
+  if (req.query.hasLeaves === 'true') {
+    query['plantCharacteristics.hasLeaves'] = true;
+  }
+  if (req.query.hasFruitsOrSeeds === 'true') {
+    query['plantCharacteristics.hasFruitsOrSeeds'] = true;
+  }
+
+  try {
+      const plants = await PlantSighting.find(query).sort(sortOption);
+      res.render('forum', { title: 'Forum', plants });
+  } catch (error) {
+      console.error('Failed to fetch plants:', error);
+      res.status(500).send('Error fetching plants from the database');
+  }
+};
+
+exports.getPlantInfo = async (req, res) => {
+  try {
+    const plantId = req.params.id;
+    const plant = await PlantSighting.findById(plantId);
+    if (!plant) {
+      return res.status(404).send('Plant not found');
+    }
+    res.render('plant-info', { title: 'Plant Information', plant });
+  } catch (error) {
+    console.error('Failed to fetch plant:', error);
+    res.status(500).send('Error fetching plant from the database');
+  }
+};
+// controllers/plantSighting.js
+exports.getEditPlantForm = async (req, res) => {
+  try {
+    const plantId = req.params.id;
+    const plant = await PlantSighting.findById(plantId);
+
+    if (!plant) {
+      return res.status(404).send('Plant not found');
+    }
+
+    res.render('edit-plant', { plant });
+  } catch (error) {
+    console.error('Failed to fetch plant:', error);
+    res.status(500).send('Error fetching plant from the database');
+  }
+};
+
+exports.updatePlantSighting = async (req, res) => {
+  try {
+    const plantId = req.params.id;
+    const { commonName, scientificName, description, dbPediaUri } = req.body;
+
+    // Set the new confirmation status based on the presence of a DBPedia URI
+    let confirmation = 'Pending Verification';
+    if (dbPediaUri) {
+      confirmation = 'Verified';
+    }
+    // Update the plant sighting with the new information
+    const updatedPlant = await PlantSighting.findByIdAndUpdate(
+      plantId,
+      {
+        'identification.commonName': commonName,
+        'identification.scientificName': scientificName,
+        'identification.description': description,
+        'identification.dbPediaUri': dbPediaUri,
+        'identification.confirmation': confirmation,
+      },
+      { new: true }
+    );
+    // If the plant is not found, return a 404 error
+    if (!updatedPlant) {
+      return res.status(404).send('Plant not found');
+    }
+    // Redirect to the plant info page
+    res.redirect(`/plant-info/${updatedPlant._id}`);
+  } catch (error) {
+    console.error('Failed to update plant:', error);
+    res.status(500).send('Error updating plant in the database');
   }
 };

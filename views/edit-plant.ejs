@@ -1,0 +1,66 @@
+<!-- edit-plant.ejs -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Edit Plant Sighting</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/form.css" />
+    <script defer src="/javascripts/autocap.js"></script>
+    <script defer src="/javascripts/dbpedia.js"></script>
+  </head>
+  <%- include('./partials/header.ejs'); -%>
+  <body>
+    <main>
+      <form
+        id="editPlantForm"
+        action="/edit-plant-sighting/<%= plant._id %>"
+        method="post"
+      >
+        <h1>Edit Plant Sighting</h1>
+
+        <label for="commonName">Common Name:</label>
+        <input
+          type="text"
+          id="commonName"
+          name="commonName"
+          value="<%= plant.identification.commonName %>"
+          oninput="autocap(this); getDBPediaInfo(this.value);"
+          required
+        />
+        <div id="dbpediaInfo"></div>
+
+        <label for="scientificName">Scientific Name:</label>
+        <input
+          type="text"
+          id="scientificName"
+          name="scientificName"
+          value="<%= plant.identification.scientificName %>"
+          oninput="autocap(this)"
+          required
+        />
+
+        <label for="description">Description:</label>
+        <input
+          type="text"
+          id="description"
+          name="description"
+          value="<%= plant.identification.description %>"
+          required
+        />
+
+        <label for="dbPediaUri">DBPedia URI:</label>
+        <input
+          type="text"
+          id="dbPediaUri"
+          name="dbPediaUri"
+          value="<%= plant.identification.dbPediaUri %>"
+        />
+
+        <input type="submit" value="Update Sighting" />
+      </form>
+    </main>
+  </body>
+  
+
+  <%- include('./partials/footer.ejs'); -%>
+</html>

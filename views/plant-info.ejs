@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plant Information</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <%- include('partials/header') %>
+    <div
+      class="container mt-5"
+      data-latitude="<%= plant.location.coordinates[1] %>"
+      data-longitude="<%= plant.location.coordinates[0] %>"
+    >
+      <h1 class="mb-4"><%= plant.identification.commonName %></h1>
+      <div class="row">
+        <div class="col-md-6">
+          <img
+            src="/<%= plant.identification.photo %>"
+            alt="Plant Image"
+            class="img-fluid"
+          />
+        </div>
+        <div class="col-md-6">
+          <h2>Details</h2>
+          <% if (plant.identification.confirmation === 'Pending Confirmation') { %>
+            <button id="editButton">Edit</button>
+            <% } %>
+          <p><strong>Scientific Name:</strong> <%= plant.identification.scientificName %></p>
+          <p><strong>Description:</strong> <%= plant.identification.description %></p>
+          <p><strong>Status:</strong> <%= plant.identification.confirmation %></p>
+          <div id="mapid" style="height: 300px;"></div>
+          <p><strong>Characteristics:</strong></p>
+          <ul>
+            <li>Has Flowers: <%= plant.plantCharacteristics.hasFlowers ? 'Yes' : 'No' %></li>
+            <li>Has Leaves: <%= plant.plantCharacteristics.hasLeaves ? 'Yes' : 'No' %></li>
+            <li>Has Fruits or Seeds: <%= plant.plantCharacteristics.hasFruitsOrSeeds ? 'Yes' : 'No' %></li>
+            <li>Sun Exposure: <%= plant.plantCharacteristics.sunExposure %></li>
+            <li>Flower Color: <%= plant.plantCharacteristics.flowerColor %></li>
+            <li>Plant Length: <%= plant.plantCharacteristics.plantLength %> cm</li>
+            <li>Plant Height: <%= plant.plantCharacteristics.plantHeight %> cm</li>
+            <li>Plant Spread: <%= plant.plantCharacteristics.plantSpread %> cm</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!--Will move this into its on script file, was for testing to see how it works-->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var container = document.querySelector('.container');
+        var latitude = parseFloat(container.getAttribute('data-latitude'));
+        var longitude = parseFloat(container.getAttribute('data-longitude'));
+        var map = L.map('mapid').setView([latitude, longitude], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+          maxZoom: 18,
+        }).addTo(map);
+        var marker = L.marker([latitude, longitude]).addTo(map);
+      });
+    </script>
+    <script>
+        const editButton = document.getElementById('editButton');
+        if (editButton) {
+          editButton.addEventListener('click', () => {
+            window.location.href = `/edit-plant-sighting/<%= plant._id %>`;
+          });
+        }
+      </script>
+  </body>
+</html>
