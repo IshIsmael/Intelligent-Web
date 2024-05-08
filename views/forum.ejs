@@ -21,8 +21,13 @@
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
         </select>
+        <label for="sortSelect">Verification Sort:</label>
+        <select id="statusFilter">
+            <option value="">All</option>
+            <option value="Pending Confirmation">Pending Confirmation</option>
+            <option value="Verified">Verified</option>
+        </select>
     </div>
-
     <div class="filter-options mb-3">
         <h5>Filter by Characteristics:</h5>
         <div class="form-check">
@@ -50,6 +55,7 @@
                             <img src="<%= plant.identification.photo %>" class="card-img-top" alt="Plant Image">
                             <div class="card-body">
                                 <h5 class="card-title"><%= plant.identification.commonName %></h5>
+                                <p>Status: <%= plant.identification.confirmation %></p>
                                 <p class="card-text"><%= plant.identification.description %></p>
                                 <a href="/plant-info/<%= plant._id %>" class="btn btn-primary">View Details</a>
                             </div>
