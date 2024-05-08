@@ -80,26 +80,15 @@ exports.listPlants = async (req, res) => {
   // Sorting logic
   let sortOption = {};
   switch (req.query.sort) {
-    case 'newest':
-      sortOption = { 'dateSeen': -1 };
-      break;
-    case 'oldest':
-      sortOption = { 'dateSeen': 1 };
-      break;
-    case 'identified':
-      query['identification.confirmation'] = 'Verified';
-      sortOption = { 'identification.commonName': 1 };
-      break;
-    case 'unidentified':
-      query['identification.confirmation'] = 'Pending Confirmation';
-      sortOption = { 'identification.commonName': 1 };
-      break;
-    case 'distance':
-      // to add later
-      break;
-    default:
-      sortOption = { 'identification.commonName': 1 }; // Set it to default for convenience
-      break;
+      case 'newest':
+          sortOption = { 'dateSeen': -1 };
+          break;
+      case 'oldest':
+          sortOption = { 'dateSeen': 1 };
+          break;
+      default:
+          sortOption = { 'identification.commonName': 1 }; // Set it to default for convenience
+          break;
   }
 
   // Filtering logic
@@ -114,16 +103,11 @@ exports.listPlants = async (req, res) => {
   }
 
   try {
-    let plants;
-    if (req.query.sort === 'identified' || req.query.sort === 'unidentified') {
-      plants = await PlantSighting.find(query).sort(sortOption);
-    } else {
-      plants = await PlantSighting.find(query).sort(sortOption);
-    }
-    res.render('forum', { title: 'Forum', plants });
+      const plants = await PlantSighting.find(query).sort(sortOption);
+      res.render('forum', { title: 'Forum', plants });
   } catch (error) {
-    console.error('Failed to fetch plants:', error);
-    res.status(500).send('Error fetching plants from the database');
+      console.error('Failed to fetch plants:', error);
+      res.status(500).send('Error fetching plants from the database');
   }
 };
 
