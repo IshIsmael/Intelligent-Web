@@ -63,9 +63,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -88,8 +86,24 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+const { Server } = require('socket.io');
+const io = new Server(server, {
+  path: '/plant-info/*',
+});
+
+io.on('connection', socket => {
+  let room;
+
+  socket.on('joinRoom', arg => {
+    room = arg;
+    socket.join(arg);
+  });
+
+  socket.on('message', arg => {
+    io.to(room).emit('message', arg);
+  });
+});

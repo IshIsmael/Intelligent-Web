@@ -2,70 +2,114 @@
 <!-- this is where the plants are displayed -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Forum</title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/forum.css" />
     <!--Just so so i can see what it looks like-->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- sorts-->
     <script defer src="/javascripts/forum.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <%- include('partials/header') %>
-    <div class="sorting-options mb-3">
-        <label for="sortSelect">Sort by:</label>
-        <select id="sortSelect" class="form-control">
+
+    <main>
+      <div class="sort-and-filter">
+        <div class="sorting-section">
+          <label for="sortSelect">Sort by:</label>
+          <select id="sortSelect" class="form-control">
             <option value="default">Default (Alphabetical)</option>
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
-        </select>
-        <label for="sortSelect">Verification Sort:</label>
-        <select id="statusFilter">
+          </select>
+          <label for="sortSelect">Verification Sort:</label>
+          <select id="statusFilter">
             <option value="">All</option>
             <option value="Pending Confirmation">Pending Confirmation</option>
             <option value="Verified">Verified</option>
-        </select>
-    </div>
-    <div class="filter-options mb-3">
-        <h5>Filter by Characteristics:</h5>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="hasFlowers" id="hasFlowersFilter">
-          <label class="form-check-label" for="hasFlowersFilter">Has Flowers</label>
+          </select>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="hasLeaves" id="hasLeavesFilter">
-          <label class="form-check-label" for="hasLeavesFilter">Has Leaves</label>
+
+        <div class="filter-section">
+          <h5>Filter by Characteristics:</h5>
+          <div class="filter-options">
+            <div class="filter-check-label">
+              <input
+                class="filter-check"
+                type="checkbox"
+                value="hasFlowers"
+                id="hasFlowersFilter"
+              />
+              <label class="filter-label" for="hasFlowersFilter"
+                >Has Flowers</label
+              >
+            </div>
+            <div class="filter-check-label">
+              <input
+                class="filter-check"
+                type="checkbox"
+                value="hasLeaves"
+                id="hasLeavesFilter"
+              />
+              <label class="filter-label" for="hasLeavesFilter"
+                >Has Leaves</label
+              >
+            </div>
+            <div class="filter-check-label">
+              <input
+                class="filter-check"
+                type="checkbox"
+                value="hasFruitsOrSeeds"
+                id="hasFruitsOrSeedsFilter"
+              />
+              <label class="filter-label" for="hasFruitsOrSeedsFilter"
+                >Has Fruits or Seeds</label
+              >
+            </div>
+            <button id="applyFiltersBtn" class="btn btn-primary">Apply</button>
+          </div>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="hasFruitsOrSeeds" id="hasFruitsOrSeedsFilter">
-          <label class="form-check-label" for="hasFruitsOrSeedsFilter">Has Fruits or Seeds</label>
-        </div>
-        <button id="applyFiltersBtn" class="btn btn-primary mt-2">Apply Filters</button>
       </div>
 
-    <div class="container mt-5">
+      <div>
         <h1 class="mb-4">Plant Forum</h1>
         <% if (plants.length > 0) { %>
-            <div class="row">
-                <% plants.forEach(plant => { %>
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <img src="<%= plant.identification.photo %>" class="card-img-top" alt="Plant Image">
-                            <div class="card-body">
-                                <h5 class="card-title"><%= plant.identification.commonName %></h5>
-                                <p>Status: <%= plant.identification.confirmation %></p>
-                                <p class="card-text"><%= plant.identification.description %></p>
-                                <a href="/plant-info/<%= plant._id %>" class="btn btn-primary">View Details</a>
-                            </div>
-                        </div>
-                    </div>
-                <% }); %>
+        <div class="row">
+          <% plants.forEach(plant => { %>
+          <div class="col-md-4 mb-4">
+            <div class="card">
+              <img
+                src="<%= plant.identification.photo %>"
+                class="card-img-top"
+                alt="Plant Image"
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  <%= plant.identification.commonName %>
+                </h5>
+                <p>Status: <%= plant.identification.confirmation %></p>
+                <p class="card-text"><%= plant.identification.description %></p>
+                <a href="/plant-info/<%= plant._id %>" class="btn btn-primary"
+                  >View Details</a
+                >
+              </div>
             </div>
+          </div>
+          <% }); %>
+        </div>
         <% } else { %>
-            <p>No plants have been added yet :/</p>
+        <p>No plants have been added yet :/</p>
         <% } %>
-    </div>
-</body>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <%- include('./partials/footer.ejs'); -%>
+  </body>
 </html>
