@@ -7,10 +7,13 @@ self.addEventListener('install', (event) => {
             cache.addAll([
                 '/',
                 '../create',
+                '../forum',
+                '../nickname',
                 '/javascripts/index.js',
                 '/javascripts/map.js',
                 '/javascripts/script.js',
                 '/javascripts/nickname.js',
+                '/javascripts/sighting.js',
                 '/stylesheets/footer.css',
                 '/stylesheets/form.css',
                 '/stylesheets/header.css',
