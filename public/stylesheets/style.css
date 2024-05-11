@@ -11,6 +11,19 @@
 * {
   box-sizing: border-box;
 }
+#onlineStatus{
+  display:block;
+}
+#offlineStatus{
+  display:none;
+}
+
+
+#offline-card-text,#offline-card-title,#offline-view-details, .hidden{
+  display:none;
+}
+
+
 
 html,
 body {
