@@ -5,7 +5,6 @@ var multer = require('multer');
 const plantSightingController = require('../controllers/plantSighting');
 const path = require('path');
 
-
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Plant App' });
@@ -22,19 +21,20 @@ router.get('/create', function (req, res, next) {
 });
 
 /* GET individual plant information page. */
-router.get('/plant-info/:id', plantSightingController.getPlantInfo);  
+router.get('/plant-info/:id', plantSightingController.getPlantInfo);
 
 // Multer
 // Set up multer for file uploads
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-      cb(null, 'public/images/uploads');
+  destination: function (req, file, cb) {
+    cb(null, 'public/images/uploads');
   },
-  filename: function(req, file, cb) {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const filename = file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname);
-      cb(null, filename);
-  }
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const filename =
+      file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname);
+    cb(null, filename);
+  },
 });
 
 const upload = multer({ storage: storage });
@@ -47,14 +47,20 @@ router.post(
 );
 
 // get Forum route
-router.get('/forum', 
-  plantSightingController.listPlants
-);
+router.get('/forum', plantSightingController.listPlants);
 
 // routes.js
-router.get('/edit-plant-sighting/:id', plantSightingController.getEditPlantForm);
+router.get(
+  '/edit-plant-sighting/:id',
+  plantSightingController.getEditPlantForm
+);
 // Post to edit plant sighting
-router.post('/edit-plant-sighting/:id', plantSightingController.updatePlantSighting);
+router.post(
+  '/edit-plant-sighting/:id',
+  plantSightingController.updatePlantSighting
+);
 
+// Chat endpoints
+router.put('/newMessage', plantSightingController.newMessage);
 
 module.exports = router;

@@ -2,7 +2,6 @@
 const PlantSighting = require('../models/plantSighting');
 
 exports.createSighting = async (req, res) => {
-  
   try {
     const {
       dateSeen,
@@ -75,10 +74,11 @@ exports.createSighting = async (req, res) => {
     res.status(500).send('Error saving plant sighting to the database');
   }
 };
+
 exports.listPlants = async (req, res) => {
   let query = {};
   let sortOption = {};
-// Filtering and Sorting logic
+  // Filtering and Sorting logic
   switch (req.query.sort) {
     case 'newest':
       sortOption = { dateSeen: -1 };
@@ -174,5 +174,19 @@ exports.updatePlantSighting = async (req, res) => {
   } catch (error) {
     console.error('Failed to update plant:', error);
     res.status(500).send('Error updating plant in the database');
+  }
+};
+
+exports.newMessage = async (req, res) => {
+  try {
+    const { id, ...messageObj } = req.body;
+
+    await PlantSighting.findByIdAndUpdate(id, {
+      $push: { comments: messageObj },
+    });
+
+    res.status(200).send('Message added to database');
+  } catch (err) {
+    res.status(500).send('An error occured');
   }
 };
