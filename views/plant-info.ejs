@@ -109,7 +109,17 @@
             alt="Plant Image"
           />
           <div class="comments">
-            <div class="messageBox"></div>
+            <div class="messageBox">
+              <% plant.comments.forEach( message => { %>
+              <div class="message">
+                <div><%= message.message %></div>
+                <div>
+                  <%= message.date.toLocaleDateString('en-uk', { minute:
+                  'numeric', hour: 'numeric', }) %>
+                </div>
+              </div>
+              <% }) %>
+            </div>
 
             <form class="comments-form">
               <input class="commentsInput" type="text" />

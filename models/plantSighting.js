@@ -20,7 +20,7 @@ const plantSightingSchema = new Schema({
     plantHeight: { type: Number, required: true },
     plantSpread: { type: Number, required: true },
     plantLength: { type: Number, required: true },
-    flowerColor: { type: String, required: true},
+    flowerColor: { type: String, required: true },
     hasFlowers: { type: Boolean, required: true },
     hasFruitsOrSeeds: { type: Boolean, required: true },
     hasLeaves: { type: Boolean, required: true },
@@ -31,11 +31,14 @@ const plantSightingSchema = new Schema({
     },
   },
   comments: [
-    {
-      message: { type: String, required: true },
-      date: { type: Date, default: Date.now },
-      userNickname: { type: String, required: true },
-    },
+    new Schema(
+      {
+        message: { type: String, required: true },
+        date: { type: Date, default: Date.now },
+        userNickname: { type: String, required: true },
+      },
+      { _id: false }
+    ),
   ],
 });
 

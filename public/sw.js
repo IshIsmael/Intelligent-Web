@@ -35,10 +35,10 @@ self.addEventListener('fetch', event => {
       const cache = await caches.open('core');
       const cachedResponse = await cache.match(event.request);
       if (cachedResponse) {
-        console.log('Service Worker: Fetching from Cache: ', event.request.url);
+        // console.log('Service Worker: Fetching from Cache: ', event.request.url);
         return cachedResponse;
       } else {
-        console.log('Service Worker: Fetching from URL: ', event.request.url);
+        // console.log('Service Worker: Fetching from URL: ', event.request.url);
         return fetch(event.request);
       }
     })()

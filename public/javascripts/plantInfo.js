@@ -32,8 +32,32 @@ const socket = io('http://localhost:3000/', {
 
 socket.emit('joinRoom', plantInformation._id);
 
+messageBox.scrollTo(0, messageBox.scrollHeight);
+
+const newMessage = async function (messageObj) {
+  try {
+    const url = '/newMessage';
+    const options = {
+      method: 'PUT',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: plantInformation._id,
+        ...messageObj,
+      }),
+    };
+
+    await fetch(url, options);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 socket.on('message', arg => {
-  const currentTime = new Date().toLocaleDateString('en-uk', {
+  const messageTime = new Date();
+
+  const currentTime = messageTime.toLocaleDateString('en-uk', {
     minute: 'numeric',
     hour: 'numeric',
   });
@@ -49,6 +73,11 @@ form.addEventListener('submit', e => {
   e.preventDefault();
 
   if (input.value != '') {
+    newMessage({
+      message: input.value,
+      date: new Date(),
+      userNickname: 'Luca',
+    });
     socket.emit('message', input.value);
     input.value = '';
   }
