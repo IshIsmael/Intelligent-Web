@@ -1,3 +1,62 @@
+
+<div class="sort-and-filter">
+    <div class="sorting-section">
+          <span>
+            <label for="sortSelect">Sort by</label>
+            <select id="sortSelect" class="form-control">
+              <option value="default">Default (Alphabetical)</option>
+              <option value="newest">Newest</option>
+              <option value="oldest">Oldest</option>
+            </select>
+          </span>
+        <span>
+            <label for="statusOfflineFilter">Verification Sort</label>
+            <select id="statusOfflineFilter">
+              <option value="">All</option>
+              <option value="Pending Confirmation">Pending Confirmation</option>
+              <option value="Verified">Verified</option>
+            </select>
+          </span>
+    </div>
+    <div class="filter-section">
+        <div>Filter by Characteristics:</div>
+        <div class="filter-options">
+            <div class="filter-check-label">
+                <input class="filter-check"
+                       type="checkbox"
+                       value="hasFlowers"
+                       id="hasFlowersOfflineFilter"
+                />
+                <label class="filter-label" for="hasFlowersOfflineFilter">
+                    Has Flowers
+                </label>
+            </div>
+            <div class="filter-check-label">
+                <input class="filter-check"
+                       type="checkbox"
+                       value="hasLeaves"
+                       id="hasLeavesOfflineFilter"
+                />
+                <label class="filter-label" for="hasLeavesOfflineFilter">
+                    Has Leaves
+                </label>
+            </div>
+            <div class="filter-check-label">
+                <input class="filter-check"
+                       type="checkbox"
+                       value="hasFruitsOrSeeds"
+                       id="hasFruitsOrSeedsOfflineFilter"
+                />
+                <label class="filter-label" for="hasFruitsOrSeedsOfflineFilter">
+                    Has Fruits or Seeds
+                </label>
+            </div>
+        </div>
+        <button id="applyOfflineFiltersBtn" class="btn btn-primary">Offline</button>
+    </div>
+</div>
+
+
 <div class="plants-section">
     <h1 class="mb-4">Plant Forum</h1>
     <p id="offlineMessage">There is currently no Downloaded Entries</p>

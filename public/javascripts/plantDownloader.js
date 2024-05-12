@@ -4,6 +4,8 @@ const handleSuccess3 = (event) => {
     console.log("Opened..")// USED FOR TESTING
     window.addEventListener('online',isOnline)
     window.addEventListener('offline',isOffline)
+    const applyOfflineFiltersBtn = document.getElementById('applyOfflineFiltersBtn')
+    applyOfflineFiltersBtn.addEventListener('click', offlineFilters)
 }
 
 //This is what is needed to initialise the indexedDB objects in the database
@@ -22,16 +24,16 @@ function checkIfAlreadyDownloaded(plant){
         //states what action is going to happen to what objects
         const action = db.transaction('plants', 'readonly')
         const store = action.objectStore('plants')
-        var pointer = store.openCursor()
+        let pointer = store.openCursor()
         console.log("PLANT:")
         console.log(plant)
         //Pointer loops the IndexedDB list
         pointer.onsuccess = function(ev){
             //gets the current element at pointer position
-            var current = ev.target.result
+            const current = ev.target.result
             //checks that the pointer is not outside the db
             if (current !== null){
-                var value = current.value
+                const value = current.value
                 // checks if plant is already in db
                 if (value._id === plant._id){
                     resolve("Already in DB")
@@ -101,18 +103,9 @@ const showOfflinePosts=(plant, amountOfPlants) =>{
         const image = document.getElementById("offline-image")
         const title = document.getElementById("offline-card-title")
         const status = document.getElementById("offline-card-status")
-        image.removeAttribute("id") // otherwise this will be hidden as well
-        title.removeAttribute("id")
         image.src = plant.identification.photo
-        image.setAttribute("plant-image-id", plant.id)
-        title.removeAttribute("id")
         title.innerText = plant.identification.commonName
-        title.setAttribute("plant-text-id", plant.id)
-        status.removeAttribute("id")
         status.innerText = "Status: " +  plant.identification.confirmation
-        status.setAttribute("plant-status-id", plant.id)
-        plantCard.removeAttribute("id")
-        plantCard.setAttribute("plant-card-id", plant.id)
         plantCard.append(image)
         plantCard.append(title)
         plantCard.append(status)
@@ -135,7 +128,7 @@ function isOffline(){
     const getAllRequest = store.getAll()
     getAllRequest.addEventListener("success", () => {
         const plants = getAllRequest.result // Now an array
-        var amountOfEntries = plants.length //gets the length of the array
+        let count = 1 //gets the length of the array
         const card = document.getElementById("offlineRow")
         const defaultMessage = document.getElementById("offlineMessage")
         if (plants.length === 0){
@@ -145,17 +138,105 @@ function isOffline(){
             defaultMessage.innerText = ""
             card.style.display = "flex" //Turns it back to visible
             for (const plant of plants) {
+                console.log(plant)
                 if (plant !== null) {
-                    showOfflinePosts(plant, amountOfEntries)
-                    amountOfEntries--
+                    showOfflinePosts(plant, count)
+                    count++
                 }
             }
         }
     })
-
-
 }
 
+//This applies the offline filters to the given array of plants
+function applyOfflineFilter(plants,filterName){
+    const plantsFilter = document.getElementById(filterName).checked
+    if (plantsFilter === true) {
+        return plants.filter(function (plant) {
+            return plant.plantCharacteristics[filterName.replace("OfflineFilter", "")] === plantsFilter
+        })
+    } else {
+        return plants
+    }
+}
+//This checks the confirmation status of the plants and only returns the ones with that type or all
+function checkConfirmation(plants){
+    const statusOfflineFilter = document.getElementById('statusOfflineFilter').value
+    //Checks if all was selected
+    if (statusOfflineFilter === ""){
+        return plants
+    }{
+        return plants.filter(function(plant){
+            return plant.identification.confirmation === statusOfflineFilter
+        })
+    }
+}
+
+function showFilteredResults(filterPlants,amountOfPlants){
+    var entries =  document.getElementById("offlineRow")
+    var childNodes = entries.childNodes
+    console.log(childNodes)
+    for (var i = childNodes.length - 1; i>0; i--){
+        if (childNodes[i].id === "offlineCard"){
+            console.log(childNodes[i].id)
+            console.log("match")
+            continue
+        }else {
+            console.log(childNodes[i].id)
+            entries.removeChild(childNodes[i])
+        }
+    }
+    const card = document.getElementById("offlineRow")
+    const defaultMessage = document.getElementById("offlineMessage")
+    let count = 1//gets the length of the array
+    if (amountOfPlants > 0) {
+        defaultMessage.innerText = ""
+        card.style.display = "flex" //Turns it back to visible
+        for (const plant of filterPlants) {
+            if (plant !== null) {
+                console.log(count)
+                showOfflinePosts(plant, count)
+                if (count !== amountOfPlants ) {
+                    count++
+                }
+            }
+        }
+    }else{
+       defaultMessage.innerText = "There are no plants currently downloaded that fulfill those conditions"
+       card.style.display = "none" //turns the template card invisible
+   }
+}
+
+
+
+
+//This is the main function that applies the filters to the posts on the offline forum
+function applyOfflineSelectedFilters(plants) {
+    let filteredPlants = []
+    const namesOfFilters = ["hasFlowersOfflineFilter","hasLeavesOfflineFilter"
+        , "hasFruitsOrSeedsOfflineFilter"]
+    for (const plant of plants) {
+        if (plant !== null) {
+            filteredPlants.push(plant)
+        }
+    }
+    for (const pos in namesOfFilters) {
+        filteredPlants = applyOfflineFilter(filteredPlants, namesOfFilters[pos])
+    }
+    filteredPlants = checkConfirmation(filteredPlants)
+    var filteredPlantLength = filteredPlants.length
+    showFilteredResults(filteredPlants, filteredPlantLength)
+}
+
+function offlineFilters(){
+    const db = plantsIndexedDB.result
+    const action = db.transaction('plants', 'readwrite') //states what action is going to happen to what objects
+    const store = action.objectStore('plants')
+    const allPlants = store.getAll()
+    allPlants.onsuccess =  function(ev) {
+        applyOfflineSelectedFilters(allPlants.result)
+    }
+}
 const handleError3=() => {
     console.error(`Database Error:`)
 }

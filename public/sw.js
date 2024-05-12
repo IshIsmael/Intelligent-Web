@@ -12,9 +12,13 @@ self.addEventListener('install', event => {
           '/javascripts/map.js',
           '/javascripts/script.js',
           '/javascripts/nickname.js',
+          '/javascripts/forum.js',
+          '/javascripts/plantDownloader.js',
           '/stylesheets/footer.css',
           '/stylesheets/form.css',
           '/stylesheets/header.css',
+          '/stylesheets/style.css',
+          '/stylesheets/nickname.css'
         ]);
         console.log('[Service Worker] : Installed');
       } catch {
