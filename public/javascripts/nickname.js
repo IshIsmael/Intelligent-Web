@@ -69,13 +69,13 @@ function getNickname() {
 function checkIfEmpty() {
   getNickname()
     .then(value => {
-      document.getElementById('EnterNickname').style.display = 'none';
-      document.getElementById('checkNickname').style.display = 'block';
+      document.getElementById('EnterNickname').classList.add('hidden');
+      document.querySelector('.checkNickname').classList.remove('hidden');
       console.log(value);
     })
     .catch(undefined => {
-      document.getElementById('EnterNickname').style.display = 'block';
-      document.getElementById('checkNickname').style.display = 'none';
+      document.getElementById('EnterNickname').classList.remove('hidden');
+      document.querySelector('.checkNickname').classList.add('hidden');
 
       console.log(undefined);
     });

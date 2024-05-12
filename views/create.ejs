@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add a Plant Sighting</title>
+
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <link rel="stylesheet" href="/stylesheets/form.css" />
+
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -12,6 +16,7 @@
       defer
       src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     ></script>
+
     <script defer src="/javascripts/script.js"></script>
     <script defer src="/javascripts/map.js"></script>
     <script defer src="/javascripts/autocap.js"></script>
@@ -20,143 +25,189 @@
   <%- include('./partials/header.ejs'); -%>
   <body>
     <main>
-        <div id="checkNickname">
-        <form
-          id="plantSightingForm"
-          action="/submit-plant-sighting"
-          method="post"
-          enctype="multipart/form-data"
-        >
-          <h1>Add a Plant Sighting</h1>
+      <form
+        id="plantSightingForm"
+        action="/submit-plant-sighting"
+        method="post"
+        enctype="multipart/form-data"
+        class="checkNickname"
+      >
+        <h1>Add a Plant Sighting</h1>
 
-          <label for="dateSeen">Date Seen:</label>
-          <input type="datetime-local" id="dateSeen" name="dateSeen" required />
+        <label for="dateSeen">Date Seen:</label>
+        <input type="datetime-local" id="dateSeen" name="dateSeen" required />
 
-          <div id="noError" style="color: red; display: none;">
-            Please select a location on the map.
+        <div id="noError" style="color: red; display: none">
+          Please select a location on the map.
+        </div>
+
+        <div id="map"></div>
+
+        <button type="button" id="getLocationBtn">
+          Use Your Current Location
+        </button>
+        <label for="userNickname">Nickname:</label>
+
+        <div class="nickname-and-button">
+          <input
+            placeholder="Nickname"
+            type="text"
+            id="userNickname"
+            name="userNickname"
+            required
+          />
+          <button type="button" id="fillUserNickname">Fill the username</button>
+        </div>
+
+        <label for="image">Image:</label>
+        <input
+          type="file"
+          id="image"
+          name="image"
+          accept="image/*"
+          onchange="previewImage(event)"
+        />
+        <img
+          id="imagePreview"
+          src="#"
+          alt="Image preview..."
+          style="display: none"
+        />
+
+        <input
+          type="hidden"
+          id="latitude"
+          name="latitude"
+          step="any"
+          required
+        />
+
+        <input
+          type="hidden"
+          id="longitude"
+          name="longitude"
+          step="any"
+          required
+        />
+
+        <label for="commonName">Common Name:</label>
+        <input
+          placeholder="Common Name"
+          type="text"
+          id="commonName"
+          name="commonName"
+          required
+        />
+        <div id="dbpediaInfo"></div>
+
+        <label for="scientificName">Scientific Name:</label>
+        <input
+          placeholder="Scientific Name"
+          type="text"
+          id="scientificName"
+          name="scientificName"
+          required
+        />
+
+        <label for="description">Description:</label>
+        <input
+          placeholder="Description"
+          type="text"
+          id="description"
+          name="description"
+          required
+        />
+
+        <label for="plantLength">Plant Length (cm):</label>
+        <input
+          placeholder="Plant Length"
+          type="number"
+          id="plantLength"
+          name="plantLength"
+          step="0.1"
+          required
+        />
+
+        <label for="plantHeight">Plant Height (cm):</label>
+        <input
+          placeholder="Plant Height"
+          type="number"
+          id="plantHeight"
+          name="plantHeight"
+          step="0.1"
+          required
+        />
+
+        <label for="plantSpread">Plant Spread (cm):</label>
+        <input
+          placeholder="Plant Spread"
+          type="number"
+          id="plantSpread"
+          name="plantSpread"
+          step="0.1"
+          required
+        />
+
+        <label for="flowerColor">Flower Colour:</label>
+        <input
+          placeholder="Flower Colour"
+          type="text"
+          id="flowerColor"
+          name="flowerColor"
+          oninput="autocap(this)"
+          required
+        />
+
+        <label for="sunExposure">Sun Exposure:</label>
+        <select id="sunExposure" name="sunExposure" required>
+          <option value="">--Select One--</option>
+          <option value="full sun">Full Sun</option>
+          <option value="partial shade">Partial Shade</option>
+          <option value="full shade">Full Shade</option>
+        </select>
+
+        <div class="checkboxes">
+          <div class="checkbox">
+            <label for="hasFlowers">Has Flowers:</label>
+            <input
+              type="checkbox"
+              id="hasFlowers"
+              name="hasFlowers"
+              value="true"
+            />
           </div>
-          <div id="mapid" style="height: 180px"></div>
-          <button type="button" id="getLocationBtn">
-            Use Your Current Location
-          </button>
-          <label for="userNickname">Nickname:</label>
-          <button id="fillUserNickname">Fill the username</button>
-          <input type="text" id="userNickname" name="userNickname" required />
+          <div class="checkbox">
+            <label for="hasLeaves">Has Leaves:</label>
+            <input
+              type="checkbox"
+              id="hasLeaves"
+              name="hasLeaves"
+              value="true"
+            />
+          </div>
 
-          <label for="image">Image:</label>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            accept="image/*"
-            onchange="previewImage(event)"
-          />
-          <img
-            id="imagePreview"
-            src="#"
-            alt="Image preview..."
-            style="display: none"
-          />
+          <div class="checkbox">
+            <label for="hasFruitsOrSeeds">Has Fruits or Seeds:</label>
+            <input
+              type="checkbox"
+              id="hasFruitsOrSeeds"
+              name="hasFruitsOrSeeds"
+              value="true"
+            />
+          </div>
+        </div>
 
-          <input type="hidden" id="latitude" name="latitude" step="any" required />
+        <label for="dbPediaUri">DBPedia URI:</label>
+        <input
+          placeholder="DBPedia URI"
+          type="text"
+          id="dbPediaUri"
+          name="dbPediaUri"
+        />
 
-          <input
-            type="hidden"
-            id="longitude"
-            name="longitude"
-            step="any"
-            required
-          />
+        <button type="submit">Add Sighting</button>
+      </form>
 
-          <label for="commonName">Common Name:</label>
-          <input
-            type="text"
-            id="commonName"
-            name="commonName"
-            required
-          />
-          <div id="dbpediaInfo"></div>
-
-          <label for="scientificName">Scientific Name:</label>
-          <input
-            type="text"
-            id="scientificName"
-            name="scientificName"
-            required
-          />
-
-          <label for="description">Description:</label>
-          <input type="text" id="description" name="description" required />
-
-          <label for="plantLength">Plant Length (cm):</label>
-          <input
-            type="number"
-            id="plantLength"
-            name="plantLength"
-            step="0.1"
-            required
-          />
-
-          <label for="plantHeight">Plant Height (cm):</label>
-          <input
-            type="number"
-            id="plantHeight"
-            name="plantHeight"
-            step="0.1"
-            required
-          />
-
-          <label for="plantSpread">Plant Spread (cm):</label>
-          <input
-            type="number"
-            id="plantSpread"
-            name="plantSpread"
-            step="0.1"
-            required
-          />
-
-          <label for="flowerColor">Flower Colour:</label>
-          <input
-            type="text"
-            id="flowerColor"
-            name="flowerColor"
-            oninput="autocap(this)"
-            required
-          />
-
-          <label for="sunExposure">Sun Exposure:</label>
-          <select id="sunExposure" name="sunExposure" required>
-            <option value="">--Select One--</option>
-            <option value="full sun">Full Sun</option>
-            <option value="partial shade">Partial Shade</option>
-            <option value="full shade">Full Shade</option>
-          </select>
-
-          <label for="hasFlowers">Has Flowers:</label>
-          <input
-            type="checkbox"
-            id="hasFlowers"
-            name="hasFlowers"
-            value="true"
-          />
-
-          <label for="hasLeaves">Has Leaves:</label>
-          <input type="checkbox" id="hasLeaves" name="hasLeaves" value="true" />
-
-          <label for="hasFruitsOrSeeds">Has Fruits or Seeds:</label>
-          <input
-            type="checkbox"
-            id="hasFruitsOrSeeds"
-            name="hasFruitsOrSeeds"
-            value="true"
-          />
-
-          <label for="dbPediaUri">DBPedia URI:</label>
-          <input type="text" id="dbPediaUri" name="dbPediaUri" />
-
-          <input type="submit" value="Add Sighting" />
-        </form>
-      </div>
       <%- include('./partials/enter_nickname.ejs') -%>
     </main>
   </body>
