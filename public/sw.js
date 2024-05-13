@@ -18,7 +18,7 @@ self.addEventListener('install', event => {
           '/stylesheets/form.css',
           '/stylesheets/header.css',
           '/stylesheets/style.css',
-          '/stylesheets/nickname.css'
+          '/stylesheets/nickname.css',
         ]);
         console.log('[Service Worker] : Installed');
       } catch {

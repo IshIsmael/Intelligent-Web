@@ -1,17 +1,21 @@
 //This reacts to any part that involves enter_nickname.ejs and opens it successfully
+document
+  .getElementById('submit_userNickname')
+  .addEventListener('click', addNickname);
+
+if (window.location.href.includes('create')) {
+  document
+    .getElementById('fillUserNickname')
+    .addEventListener('click', fillUserNicknameBox);
+}
+
 const handleSuccess = event => {
-  console.log('Opened..'); // USED FOR TESTING
+  // console.log('Opened..'); // USED FOR TESTING
   checkIfEmpty(); //This checks if there is a nickname
 
   //The Listeners:
   // submit_userName is for the nickname login page
   // fillUserNickname is for the create post page
-  document
-    .getElementById('submit_userNickname')
-    .addEventListener('click', addNickname);
-  document
-    .getElementById('fillUserNickname')
-    .addEventListener('click', fillUserNicknameBox);
 };
 
 //This is what is needed to initialise the indexedDB objects in the database
@@ -25,7 +29,9 @@ const handleUpgrade = ev => {
 };
 
 //Does as the name implies, it adds a nickname to the data
-function addNickname() {
+function addNickname(e) {
+  e.preventDefault();
+
   const db = userIndexedDB.result;
   let nickname = document.getElementById('nickname_textbox').value; //The data from textbox
   const action = db.transaction('users', 'readwrite'); //states what action is going to happen to what objects
@@ -72,6 +78,7 @@ function checkIfEmpty() {
       document.getElementById('EnterNickname').classList.add('hidden');
       document.querySelector('.checkNickname').classList.remove('hidden');
       console.log(value);
+      userNickname = value;
     })
     .catch(undefined => {
       document.getElementById('EnterNickname').classList.remove('hidden');

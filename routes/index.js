@@ -6,9 +6,13 @@ const plantSightingController = require('../controllers/plantSighting');
 const path = require('path');
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Plant App' });
-});
+router.get(
+  '/',
+  plantSightingController.homePagePlants,
+  function (req, res, next) {
+    res.render('index', { title: 'Plant App', plants: req.plants });
+  }
+);
 
 /* GET view plants page. */
 router.get('/view-plants', function (req, res, next) {
@@ -60,7 +64,10 @@ router.post(
   plantSightingController.updatePlantSighting
 );
 
-// Chat endpoints
+// Add new chat message
 router.put('/newMessage', plantSightingController.newMessage);
+
+// Front page
+router.get('/home-page-plants', plantSightingController.homePagePlants);
 
 module.exports = router;

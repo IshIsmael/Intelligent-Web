@@ -20,11 +20,13 @@
     <script defer src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
     <script defer src="/javascripts/plantInfo.js"></script>
+    <script defer src="/javascripts/nickname.js"></script>
   </head>
 
   <body>
     <%- include('partials/header') %>
     <main>
+      <section class="checkNickname"></section>
       <h1 class="title">
         <div style="width: 60px"></div>
         <%= plant.identification.commonName %> <% if
@@ -112,7 +114,10 @@
             <div class="messageBox">
               <% plant.comments.forEach( message => { %>
               <div class="message">
-                <div><%= message.message %></div>
+                <div>
+                  <strong><%= message.userNickname %>:</strong> <%=
+                  message.message %>
+                </div>
                 <div>
                   <%= message.date.toLocaleDateString('en-uk', { minute:
                   'numeric', hour: 'numeric', }) %>
@@ -128,6 +133,7 @@
           </div>
         </div>
       </div>
+      <%- include('./partials/enter_nickname.ejs'); -%>
     </main>
 
     <!-- Footer -->

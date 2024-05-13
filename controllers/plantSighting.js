@@ -190,3 +190,15 @@ exports.newMessage = async (req, res) => {
     res.status(500).send('An error occured');
   }
 };
+
+exports.homePagePlants = async (req, res, next) => {
+  try {
+    const plants = await PlantSighting.find().sort({ dateSeen: -1 }).limit(3);
+
+    req.plants = plants;
+    next();
+  } catch (error) {
+    res.status(500).send('An error occured');
+    next();
+  }
+};

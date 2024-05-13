@@ -30,6 +30,8 @@ const socket = io('http://localhost:3000/', {
   path: '/plant-info/*',
 });
 
+let userNickname;
+
 socket.emit('joinRoom', plantInformation._id);
 
 messageBox.scrollTo(0, messageBox.scrollHeight);
@@ -62,7 +64,7 @@ socket.on('message', arg => {
     hour: 'numeric',
   });
 
-  const messageHTML = `<div class='message'> <div> ${arg} </div> 
+  const messageHTML = `<div class='message'> <div> <strong> ${userNickname}: </strong> ${arg} </div> 
   <div> ${currentTime} </div> </div> `;
 
   messageBox.insertAdjacentHTML('beforeend', messageHTML);
@@ -76,7 +78,7 @@ form.addEventListener('submit', e => {
     newMessage({
       message: input.value,
       date: new Date(),
-      userNickname: 'Luca',
+      userNickname,
     });
     socket.emit('message', input.value);
     input.value = '';

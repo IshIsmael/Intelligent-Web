@@ -1,0 +1,34 @@
+.entries {
+  display: flex;
+  flex-direction: row;
+  color: black;
+  gap: 20px;
+  margin-top: 15px;
+  justify-content: space-around;
+}
+
+.entry {
+  background-color: white;
+
+  border-radius: 10px;
+}
+
+.entry-info {
+  padding: 15px;
+}
+
+.entry-info > * {
+  margin: 0;
+}
+
+.entry-title {
+  margin: 0;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+img {
+  height: 200px;
+  object-fit: cover;
+  width: 225px;
+}

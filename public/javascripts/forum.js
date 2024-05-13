@@ -13,11 +13,6 @@ const currentFilters = {
   confirmation: urlParams.get('confirmation') || '',
 };
 
-// Making cards clickable
-function navigateToForum(id) {
-  console.log(id);
-}
-
 // Sets values of the sort select and filter checkboxes
 sortSelect.value = currentSort;
 document.getElementById('hasFlowersFilter').checked = currentFilters.hasFlowers;
