@@ -1,5 +1,4 @@
 
-
 const handleSuccess3 = (event) => {
     console.log("Opened..")// USED FOR TESTING
     window.addEventListener('online',isOnline)
@@ -12,6 +11,9 @@ const handleSuccess3 = (event) => {
 const handleUpgrade3 = (ev) => {
     const db = ev.target.result
     let store = db.createObjectStore('plants', {keyPath: "id",autoIncrement : true}) //Creates the object key
+    store.createIndex("commonName","identification.commonName", {unique:false})
+    store.createIndex("dateSeen","dateSeen", {unique: false})
+    store.createIndex("plantID","_id", {unique: true} )
     console.log("Upgraded object store...") // USED FOR TESTING
 }
 
@@ -73,44 +75,55 @@ function downloadPlant(plant) {
         }
     })
 }
-//This function displays the offline posts
+function redirectToOfflinePlantPage(plantID){
+    const selectedPlantID = encodeURIComponent(plantID)
+    window.location.href = 'offline_plant_info/'+ selectedPlantID
+}
+//This function displays the offline posts,
+// it is also responsible for implementing the link between pages
+
 const showOfflinePosts=(plant, amountOfPlants) =>{
     const row = document.getElementById("offlineRow")
-    if (amountOfPlants > 1) {
-        //Copies all the elements from the template
-        const plantCard = document.getElementById("offlineCard").cloneNode()
-        const imageCopy = document.getElementById("offline-image").cloneNode()
-        const titleCopy = document.getElementById("offline-card-title").cloneNode()
-        const statusCopy = document.getElementById("offline-card-status").cloneNode()
-        imageCopy.removeAttribute("id") // otherwise this will be hidden as well
-        imageCopy.src = plant.identification.photo
-        imageCopy.setAttribute("plant-image-id", plant.id)
-        titleCopy.removeAttribute("id")
-        titleCopy.innerText = plant.identification.commonName
-        titleCopy.setAttribute("plant-text-id", plant.id)
-        statusCopy.removeAttribute("id")
-        statusCopy.innerText = "Status: " + plant.identification.confirmation
-        statusCopy.setAttribute("plant-status-id", plant.id)
-        plantCard.removeAttribute("id")
-        plantCard.setAttribute("plant-card-id", plant.id)
-        plantCard.append(imageCopy)
-        plantCard.append(titleCopy)
-        plantCard.append(statusCopy)
-        row.append(plantCard)
-    } else {
-        //Uses the template
-        const plantCard = document.getElementById("offlineCard")
-        const image = document.getElementById("offline-image")
-        const title = document.getElementById("offline-card-title")
-        const status = document.getElementById("offline-card-status")
-        image.src = plant.identification.photo
-        title.innerText = plant.identification.commonName
-        status.innerText = "Status: " +  plant.identification.confirmation
-        plantCard.append(image)
-        plantCard.append(title)
-        plantCard.append(status)
+    const defaultCard = document.getElementById("offlineCard")
+    defaultCard.style.display="none"
+    //Copies all the elements from the template
+    const plantCard = defaultCard.cloneNode()
+    plantCard.style.display="flex"
+    plantCard.style.flexDirection = "column"
+    const imageCopy = document.getElementById("offline-image").cloneNode()
+    imageCopy.style.height= "200px"
+    imageCopy.style.objectFit= "cover"
+    imageCopy.style.width= "225px"
+    const titleCopy = document.getElementById("offline-card-title").cloneNode()
+    const statusCopy = document.getElementById("offline-card-status").cloneNode()
+    const offlineLinkCopy = document.getElementById("offline-view-details").cloneNode()
+    titleCopy.style.margin= "20px"
+    titleCopy.style.fontWeight = "bold"
+    titleCopy.style.fontSize = "20px"
+    statusCopy.style.padding = "15px"
+    statusCopy.style.margin = "0"
+    offlineLinkCopy.style.padding = "15px"
+    offlineLinkCopy.style.margin = "0"
+    imageCopy.removeAttribute("id") // otherwise this will be hidden as well
+    imageCopy.src = plant.identification.photo
+    titleCopy.removeAttribute("id")
+    titleCopy.innerText = plant.identification.commonName
+    statusCopy.removeAttribute("id")
+    statusCopy.innerText = "Status: " + plant.identification.confirmation
+    plantCard.removeAttribute("id")
+    offlineLinkCopy.removeAttribute("id")
+    offlineLinkCopy.innerText = "View Details"
+    offlineLinkCopy.setAttribute("plant", plant._id)
+    offlineLinkCopy.onclick= function() {
+        var selectedPlantID = offlineLinkCopy.getAttribute("plant")
+        redirectToOfflinePlantPage(selectedPlantID)
     }
-}
+    plantCard.append(imageCopy)
+    plantCard.append(titleCopy)
+    plantCard.append(statusCopy)
+    plantCard.append(offlineLinkCopy)
+    row.append(plantCard)
+    }
 
 //This is the function turns it back to its online counterpart
 function isOnline(){
@@ -232,11 +245,45 @@ function offlineFilters(){
     const db = plantsIndexedDB.result
     const action = db.transaction('plants', 'readwrite') //states what action is going to happen to what objects
     const store = action.objectStore('plants')
-    const allPlants = store.getAll()
-    allPlants.onsuccess =  function(ev) {
-        applyOfflineSelectedFilters(allPlants.result)
+    const sortType = document.getElementById("sortOfflineSelect").value
+    console.log(sortType)
+    var sortedPlants = []
+
+    //Sort this out tomorrow
+    if (sortType === "default") {
+        const index = store.index("commonName")
+        const allPlants = index.openCursor(null,"next")
+        allPlants.onsuccess = function (ev) {
+            var plants = ev.target.result
+            if (plants){
+                sortedPlants.push(plants.value)
+                plants.continue()
+            }
+            console.log("Could sort alphabetically")
+            console.log(sortedPlants)
+            applyOfflineSelectedFilters(sortedPlants)
+        }
+        allPlants.onerror = function(ev){
+            console.log("Could not sort alphabetically")
+        }
     }
+    if (sortType === "newest"){
+        const index = store.index("dateSeen")
+        const allPlants = index.getAll()
+        allPlants.onsuccess = function (ev) {
+            applyOfflineSelectedFilters(allPlants.result)
+        }
+    }
+    if (sortType === "oldest"){
+        const index = store.index("dateSeen")
+        const allPlants = index.getAll()
+        allPlants.onsuccess = function (ev) {
+            applyOfflineSelectedFilters(allPlants.result)
+        }
+    }
+
 }
+
 const handleError3=() => {
     console.error(`Database Error:`)
 }

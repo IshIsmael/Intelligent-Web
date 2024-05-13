@@ -14,6 +14,7 @@ self.addEventListener('install', event => {
           '/javascripts/nickname.js',
           '/javascripts/forum.js',
           '/javascripts/plantDownloader.js',
+          '/javascripts/offlinePlantInfo.js',
           '/stylesheets/footer.css',
           '/stylesheets/form.css',
           '/stylesheets/header.css',

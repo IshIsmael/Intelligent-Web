@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var multer = require('multer');
 const plantSightingController = require('../controllers/plantSighting');
+const offlinePlantController = require('../controllers/offlinePlant');
 const path = require('path');
 
 /* GET home page. */
@@ -27,6 +28,7 @@ router.get('/create', function (req, res, next) {
 /* GET individual plant information page. */
 router.get('/plant-info/:id', plantSightingController.getPlantInfo);
 
+router.get('/offline_plant_info/:plant',offlinePlantController.getPlantInfo)
 // Multer
 // Set up multer for file uploads
 const storage = multer.diskStorage({
