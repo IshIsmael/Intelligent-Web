@@ -144,6 +144,17 @@ function isOffline(){
         let count = 1 //gets the length of the array
         const card = document.getElementById("offlineRow")
         const defaultMessage = document.getElementById("offlineMessage")
+        var childNodes = card.childNodes
+        for (var i = childNodes.length - 1; i>0; i--){
+            if (childNodes[i].id === "offlineCard"){
+                console.log(childNodes[i].id)
+                console.log("match")
+                continue
+            }else {
+                console.log(childNodes[i].id)
+                card.removeChild(childNodes[i])
+            }
+        }
         if (plants.length === 0){
             card.style.display = "none" //turns the template card invisible
 
@@ -257,28 +268,50 @@ function offlineFilters(){
             var plants = ev.target.result
             if (plants){
                 sortedPlants.push(plants.value)
+                console.log(plants)
                 plants.continue()
+            }else {
+                console.log("Could sort alphabetically")
+                console.log(sortedPlants)
+                applyOfflineSelectedFilters(sortedPlants)
             }
-            console.log("Could sort alphabetically")
-            console.log(sortedPlants)
-            applyOfflineSelectedFilters(sortedPlants)
         }
         allPlants.onerror = function(ev){
             console.log("Could not sort alphabetically")
         }
     }
+    ///CHANGE THIS
     if (sortType === "newest"){
         const index = store.index("dateSeen")
-        const allPlants = index.getAll()
+        const allPlants  = index.openCursor(null,"next")
         allPlants.onsuccess = function (ev) {
-            applyOfflineSelectedFilters(allPlants.result)
+            var plants = ev.target.result
+            if (plants){
+                sortedPlants.push(plants.value)
+                console.log(plants)
+                plants.continue()
+            }else {
+                console.log("Newest to Oldest")
+                sortedPlants.reverse()
+                console.log(sortedPlants)
+                applyOfflineSelectedFilters(sortedPlants)
+            }
         }
     }
     if (sortType === "oldest"){
         const index = store.index("dateSeen")
-        const allPlants = index.getAll()
+        const allPlants  = index.openCursor(null,"next")
         allPlants.onsuccess = function (ev) {
-            applyOfflineSelectedFilters(allPlants.result)
+            var plants = ev.target.result
+            if (plants){
+                sortedPlants.push(plants.value)
+                console.log(plants)
+                plants.continue()
+            }else {
+                console.log("Oldest to Newestgit a")
+                console.log(sortedPlants)
+                applyOfflineSelectedFilters(sortedPlants)
+            }
         }
     }
 

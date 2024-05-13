@@ -8,6 +8,7 @@ self.addEventListener('install', event => {
         cache.addAll([
           '/',
           '../create',
+          '../offline_plant_info',
           '/javascripts/index.js',
           '/javascripts/map.js',
           '/javascripts/script.js',
