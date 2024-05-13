@@ -77,14 +77,14 @@ function checkIfEmpty() {
     .then(value => {
       document.getElementById('EnterNickname').classList.add('hidden');
       document.querySelector('.checkNickname').classList.remove('hidden');
-      console.log(value);
+      // console.log(value);
       userNickname = value;
     })
     .catch(undefined => {
       document.getElementById('EnterNickname').classList.remove('hidden');
       document.querySelector('.checkNickname').classList.add('hidden');
 
-      console.log(undefined);
+      // console.log(undefined);
     });
 }
 //This function fills in the user nickname on the create page

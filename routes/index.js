@@ -28,7 +28,7 @@ router.get('/create', function (req, res, next) {
 /* GET individual plant information page. */
 router.get('/plant-info/:id', plantSightingController.getPlantInfo);
 
-router.get('/offline_plant_info/:plant',offlinePlantController.getPlantInfo)
+router.get('/offline_plant_info/:plant', offlinePlantController.getPlantInfo);
 // Multer
 // Set up multer for file uploads
 const storage = multer.diskStorage({
@@ -70,6 +70,6 @@ router.post(
 router.put('/newMessage', plantSightingController.newMessage);
 
 // Front page
-router.get('/home-page-plants', plantSightingController.homePagePlants);
+router.get('/closest-plants/:location', plantSightingController.closestPlants);
 
 module.exports = router;

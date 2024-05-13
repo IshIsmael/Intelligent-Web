@@ -202,3 +202,22 @@ exports.homePagePlants = async (req, res, next) => {
     next();
   }
 };
+
+exports.closestPlants = async (req, res) => {
+  try {
+    const coordinates = req.params.location.split(',').map(value => +value);
+    console.log(coordinates);
+
+    const plants = await PlantSighting.find({
+      location: { $near: { $geometry: { type: 'Point', coordinates } } },
+    }).limit(3);
+
+    res.status(200).json({
+      status: 'success',
+      plants,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('An error occured');
+  }
+};

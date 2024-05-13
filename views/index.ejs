@@ -17,8 +17,12 @@
   <body>
     <main>
       <section class="content checkNickname">
-        <h1><%= title %></h1>
-        <p>Welcome to <%= title %></p>
+        <h1>Welcome to Plant App</h1>
+        <p>
+          Feel free to create a post or browser our forums, down below the three
+          most recent posts and the closets posts from your current location
+          will be displayed.
+        </p>
         <div class="plants-section">
           <h1>Latest Plants</h1>
           <% if (plants.length > 0) { %>
@@ -48,7 +52,6 @@
           <% } %>
         </div>
       </section>
-
       <%- include('./partials/enter_nickname.ejs'); -%>
     </main>
   </body>

@@ -43,11 +43,12 @@ h1 {
 
 main {
   margin: 20px auto;
-  width: 960px;
+  width: 1000px;
   padding: 20px;
   background-color: var(--container-color);
   border-radius: 5px;
   color: white;
+  height: fit-content;
 }
 
 button {
