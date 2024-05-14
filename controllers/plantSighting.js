@@ -3,7 +3,6 @@ const PlantSighting = require('../models/plantSighting');
 
 
 exports.createSighting = async (req, res) => {
-  
   try {
     const {
       dateSeen,
@@ -75,23 +74,23 @@ exports.createSighting = async (req, res) => {
     res.status(500).send('Error saving plant sighting to the database');
   }
 };
+
 exports.listPlants = async (req, res) => {
   let query = {};
-  // Sorting logic
   let sortOption = {};
+  // Filtering and Sorting logic
   switch (req.query.sort) {
-      case 'newest':
-          sortOption = { 'dateSeen': -1 };
-          break;
-      case 'oldest':
-          sortOption = { 'dateSeen': 1 };
-          break;
-      default:
-          sortOption = { 'identification.commonName': 1 }; // Set it to default for convenience
-          break;
+    case 'newest':
+      sortOption = { dateSeen: -1 };
+      break;
+    case 'oldest':
+      sortOption = { dateSeen: 1 };
+      break;
+    default:
+      sortOption = { 'identification.commonName': 1 };
+      break;
   }
 
-  // Filtering logic
   if (req.query.hasFlowers === 'true') {
     query['plantCharacteristics.hasFlowers'] = true;
   }
@@ -101,13 +100,16 @@ exports.listPlants = async (req, res) => {
   if (req.query.hasFruitsOrSeeds === 'true') {
     query['plantCharacteristics.hasFruitsOrSeeds'] = true;
   }
+  if (req.query.confirmation) {
+    query['identification.confirmation'] = req.query.confirmation;
+  }
 
   try {
-      const plants = await PlantSighting.find(query).sort(sortOption);
-      res.render('forum', { title: 'Forum', plants });
+    const plants = await PlantSighting.find(query).sort(sortOption);
+    res.render('forum', { title: 'Forum', plants });
   } catch (error) {
-      console.error('Failed to fetch plants:', error);
-      res.status(500).send('Error fetching plants from the database');
+    console.error('Failed to fetch plants:', error);
+    res.status(500).send('Error fetching plants from the database');
   }
 };
 
@@ -176,6 +178,52 @@ exports.updatePlantSighting = async (req, res) => {
 };
 
 
+
 exports.offlineSighting = async function run(sighting){
   await sighting.save()
 }
+
+exports.newMessage = async (req, res) => {
+  try {
+    const { id, ...messageObj } = req.body;
+
+    await PlantSighting.findByIdAndUpdate(id, {
+      $push: { comments: messageObj },
+    });
+
+    res.status(200).send('Message added to database');
+  } catch (err) {
+    res.status(500).send('An error occured');
+  }
+};
+
+exports.homePagePlants = async (req, res, next) => {
+  try {
+    const plants = await PlantSighting.find().sort({ dateSeen: -1 }).limit(3);
+
+    req.plants = plants;
+    next();
+  } catch (error) {
+    res.status(500).send('An error occured');
+    next();
+  }
+};
+
+exports.closestPlants = async (req, res) => {
+  try {
+    const coordinates = req.params.location.split(',').map(value => +value);
+    console.log(coordinates);
+
+    const plants = await PlantSighting.find({
+      location: { $near: { $geometry: { type: 'Point', coordinates } } },
+    }).limit(3);
+
+    res.status(200).json({
+      status: 'success',
+      plants,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('An error occured');
+  }
+};

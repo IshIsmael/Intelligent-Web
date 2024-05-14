@@ -5,11 +5,21 @@
   --container-color: #6a7b76;
 }
 
-#checkNickname{
-  display: none;
-}
 * {
   box-sizing: border-box;
+}
+#onlineStatus {
+  display: block;
+}
+#offlineStatus {
+  display: none;
+}
+
+#offline-card-text,
+#offline-card-title,
+#offline-view-details,
+.hidden {
+  display: none;
 }
 
 html,
@@ -20,7 +30,7 @@ body {
 body {
   font: 14px 'Lucida Grande', Helvetica, Arial, sans-serif;
   margin: 0;
-  background-color: var(--background-color);
+  background-color: var(--background-color) !important;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
@@ -31,11 +41,84 @@ h1 {
   text-align: center;
 }
 
-main {
+.content {
   margin: 20px auto;
-  width: 960px;
+  width: 90%;
+  max-width: 1000px;
   padding: 20px;
   background-color: var(--container-color);
   border-radius: 5px;
   color: white;
+  height: fit-content;
+}
+
+button {
+  padding: 10px;
+  height: 40px;
+  border-radius: 5px;
+  min-width: 60px;
+  border: none;
+  background-color: var(--accent-color);
+}
+
+input[type='text'],
+input[type='number'],
+input[type='datetime-local'],
+select {
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  border: none;
+  padding: 10px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#EnterNickname {
+  margin: 0;
+  text-align: center;
+  width: 75%;
+  margin: auto;
+}
+
+#EnterNickname > form {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+@media only screen and (min-width: 1040px) {
+  .content {
+    width: 1000px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+
+  main {
+    grid-row-start: 1;
+    height: 100%;
+    overflow: auto;
+  }
+
+  #company-name {
+    display: none;
+  }
+
+  #navigation-menu {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .navigation-link {
+    width: 100%;
+    text-align: center;
+  }
 }

@@ -1,11 +1,14 @@
-<link rel="stylesheet" href="/stylesheets/nickname.css" />
-<div id="EnterNickname">
-    <script src="/javascripts/nickname.js"></script>
-    <h2>Hello there, in order to access the content, you will need a nickname</h2>
-    <h2>Do not worry, you can change it later on</h2>
-    <form>
-        <label for="enter_userNickname">Nickname:</label>
-        <input type="text" id="nickname_textbox" name="nickname_textbox" required />
-        <button  id="submit_userNickname" type="button">Submit</button>
-    </form>
+<div id="EnterNickname" class="hidden">
+  <h2>Hello there, in order to access the content, you will need a nickname</h2>
+  <h2>Do not worry, you can change it later on</h2>
+  <form>
+    <input
+      type="text"
+      id="nickname_textbox"
+      name="nickname_textbox"
+      required
+      placeholder="Nickname"
+    />
+    <button id="submit_userNickname" type="submit">Submit</button>
+  </form>
 </div>

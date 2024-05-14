@@ -1,0 +1,117 @@
+.sort-and-filter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.sorting-section {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-section {
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.filter-check-label {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.filter-label {
+  margin: 0;
+}
+
+img {
+  height: 200px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.card {
+  color: black;
+}
+
+#applyFiltersBtn {
+  margin-top: auto;
+  width: 60px;
+}
+
+.entries {
+  display: flex;
+  flex-direction: row;
+  color: black;
+  gap: 20px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.entry {
+  background-color: white;
+  border-radius: 10px;
+  width: 31%;
+}
+
+.entry-info {
+  padding: 15px;
+}
+
+.entry-info > * {
+  margin: 0;
+}
+
+.entry-title {
+  margin: 0;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.download-plant {
+  margin: 10px;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 800px) {
+  .sort-and-filter {
+    flex-direction: column;
+  }
+
+  .entry {
+    width: 47%;
+  }
+}
+
+@media only screen and (max-width: 580px) {
+  .filter-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #applyFiltersBtn {
+    margin-top: 5px;
+  }
+
+  .entry {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 1040px) {
+  .entry {
+    width: 225px;
+  }
+}

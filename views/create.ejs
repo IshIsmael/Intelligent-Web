@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add a Plant Sighting</title>
+
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <link rel="stylesheet" href="/stylesheets/form.css" />
+
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -12,6 +16,7 @@
       defer
       src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     ></script>
+
     <script defer src="/javascripts/script.js"></script>
     <script defer src="/javascripts/map.js"></script>
     <script defer src="/javascripts/autocap.js"></script>
@@ -19,33 +24,45 @@
     <script defer src="/javascripts/sighting.js" type="module"></script>
 
 
+    <script defer src="/javascripts/nickname.js"></script>
   </head>
   <%- include('./partials/header.ejs'); -%>
   <body>
     <main>
-      <div id="checkNickname">
       <form
         id="plantSightingForm"
         name="plantSightingForm"
         method="post"
         action="/submit-plant-sighting"
         enctype="multipart/form-data"
+        class="checkNickname content"
       >
         <h1>Add a Plant Sighting</h1>
 
         <label for="dateSeen">Date Seen:</label>
         <input type="datetime-local" id="dateSeen" name="dateSeen" required />
 
-        <div id="noError" style="color: red; display: none;">
+        <div id="noError" style="color: red; display: none">
           Please select a location on the map.
         </div>
-        <div id="mapid" style="height: 180px"></div>
+
+        <div id="map"></div>
+
         <button type="button" id="getLocationBtn">
           Use Your Current Location
         </button>
-
         <label for="userNickname">Nickname:</label>
-        <input type="text" id="userNickname" name="userNickname" required />
+
+        <div class="nickname-and-button">
+          <input
+            placeholder="Nickname"
+            type="text"
+            id="userNickname"
+            name="userNickname"
+            required
+          />
+          <button type="button" id="fillUserNickname">Fill the username</button>
+        </div>
 
         <label for="image">Image:</label>
         <input
@@ -62,7 +79,13 @@
           style="display: none"
         />
 
-        <input type="hidden" id="latitude" name="latitude" step="any" required />
+        <input
+          type="hidden"
+          id="latitude"
+          name="latitude"
+          step="any"
+          required
+        />
 
         <input
           type="hidden"
@@ -74,56 +97,65 @@
 
         <label for="commonName">Common Name:</label>
         <input
+          placeholder="Common Name"
           type="text"
           id="commonName"
           name="commonName"
-          oninput="autocap(this); getDBPediaInfo(this.value);"
           required
         />
         <div id="dbpediaInfo"></div>
-      <!--<script defer src="/javascripts/dbpedia.js"></script>-->
 
         <label for="scientificName">Scientific Name:</label>
         <input
+          placeholder="Scientific Name"
           type="text"
           id="scientificName"
           name="scientificName"
-          oninput="autocap(this)"
           required
         />
 
         <label for="description">Description:</label>
-        <input type="text" id="description" name="description" required />
+        <input
+          placeholder="Description"
+          type="text"
+          id="description"
+          name="description"
+          required
+        />
 
         <label for="plantLength">Plant Length (cm):</label>
         <input
+          placeholder="Plant Length"
           type="number"
           id="plantLength"
           name="plantLength"
-          step="0.01"
+          step="0.1"
           required
         />
 
         <label for="plantHeight">Plant Height (cm):</label>
         <input
+          placeholder="Plant Height"
           type="number"
           id="plantHeight"
           name="plantHeight"
-          step="0.01"
+          step="0.1"
           required
         />
 
         <label for="plantSpread">Plant Spread (cm):</label>
         <input
+          placeholder="Plant Spread"
           type="number"
           id="plantSpread"
           name="plantSpread"
-          step="0.01"
+          step="0.1"
           required
         />
 
         <label for="flowerColor">Flower Colour:</label>
         <input
+          placeholder="Flower Colour"
           type="text"
           id="flowerColor"
           name="flowerColor"
@@ -139,31 +171,48 @@
           <option value="full shade">Full Shade</option>
         </select>
 
-        <label for="hasFlowers">Has Flowers:</label>
-        <input
-          type="checkbox"
-          id="hasFlowers"
-          name="hasFlowers"
-          value="true"
-        />
+        <div class="checkboxes">
+          <div class="checkbox">
+            <label for="hasFlowers">Has Flowers:</label>
+            <input
+              type="checkbox"
+              id="hasFlowers"
+              name="hasFlowers"
+              value="true"
+            />
+          </div>
+          <div class="checkbox">
+            <label for="hasLeaves">Has Leaves:</label>
+            <input
+              type="checkbox"
+              id="hasLeaves"
+              name="hasLeaves"
+              value="true"
+            />
+          </div>
 
-        <label for="hasLeaves">Has Leaves:</label>
-        <input type="checkbox" id="hasLeaves" name="hasLeaves" value="true" />
-
-        <label for="hasFruitsOrSeeds">Has Fruits or Seeds:</label>
-        <input
-          type="checkbox"
-          id="hasFruitsOrSeeds"
-          name="hasFruitsOrSeeds"
-          value="true"
-        />
+          <div class="checkbox">
+            <label for="hasFruitsOrSeeds">Has Fruits or Seeds:</label>
+            <input
+              type="checkbox"
+              id="hasFruitsOrSeeds"
+              name="hasFruitsOrSeeds"
+              value="true"
+            />
+          </div>
+        </div>
 
         <label for="dbPediaUri">DBPedia URI:</label>
-        <input type="text" id="dbPediaUri" name="dbPediaUri" />
+        <input
+          placeholder="DBPedia URI"
+          type="text"
+          id="dbPediaUri"
+          name="dbPediaUri"
+        />
 
         <input type="submit" value="Add Sighting" id="addSighting" />
       </form>
-      </div>
+
       <%- include('./partials/enter_nickname.ejs') -%>
     </main>
   </body>
