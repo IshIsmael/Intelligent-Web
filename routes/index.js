@@ -42,9 +42,16 @@ const upload = multer({ storage: storage });
 // Post request to submit plant sighting
 router.post(
   '/submit-plant-sighting',
-  upload.single('image'),
-  plantSightingController.createSighting
+  upload.single('image'), function(sighting){
+      if(navigator.storage.estimate() > 1){
+          plantSightingController.offlineSighting(sighting)
+      }
+      else{
+          plantSightingController.createSighting
+      }
+    }
 );
+
 
 // get Forum route
 router.get('/forum', 

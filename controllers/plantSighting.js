@@ -1,6 +1,7 @@
 // controllers/plantSighting.js
 const PlantSighting = require('../models/plantSighting');
 
+
 exports.createSighting = async (req, res) => {
   
   try {
@@ -20,7 +21,6 @@ exports.createSighting = async (req, res) => {
 
     // Sets the default status to Pending Confirmation
     let confirmation = 'Pending Confirmation';
-
     // If a DBPedia URI is provided it is autmoatically verified
     if (dbPediaUri) {
       confirmation = 'Verified';
@@ -174,3 +174,8 @@ exports.updatePlantSighting = async (req, res) => {
     res.status(500).send('Error updating plant in the database');
   }
 };
+
+
+exports.offlineSighting = async function run(sighting){
+  await sighting.save()
+}

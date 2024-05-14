@@ -1,4 +1,4 @@
-//const PlantSighting = require('../../models/plantSighting');
+
 const handleSuccessOne = (event) => {
     console.log("Opened..")// USED FOR TESTING
 
@@ -11,61 +11,67 @@ const handleUpgradeOne = (ev) => {
     console.log("Upgraded object store...") // USED FOR TESTING
 }
 
-const handleErrorOne=() => {
+const handleErrorOne = () => {
     console.error(`Database Error:`)
 }
 
-function submitSighting (){
-    const db = sightingIndexedDB.result
-    let nickName = document.getElementById('userNickname').value
-    let commonName = document.getElementById('commonName').value
-    let scientificName = document.getElementById('scientificName').value
-    let plantDescription = document.getElementById('description').value
-    let plantLength = document.getElementById('plantLength').value
-    let plantHeight = document.getElementById('plantHeight').value
-    let dateFound = document.getElementById('dateSeen').value
-    let fruitOrSeeds = document.getElementById('hasFruitsOrSeeds').value
-    let hasFlowers = document.getElementById('hasFlowers').value
-    let hasLeaves = document.getElementById('hasLeaves').value
-    let dbPedia = document.getElementById('dbPediaUri').value
-    let plantColour = document.getElementById('flowerColor').value
-    let plantSpread = document.getElementById('plantSpread').value
-    let sunExposure = document.getElementById('sunExposure').value
+function submitSighting() {
+    console.log(window.navigator.onLine)
+    if (window.navigator.onLine === false) {
+        const db = sightingIndexedDB.result
+        let nickName = document.getElementById('userNickname').value
+        let commonName = document.getElementById('commonName').value
+        let scientificName = document.getElementById('scientificName').value
+        let plantDescription = document.getElementById('description').value
+        let plantLength = document.getElementById('plantLength').value
+        let plantHeight = document.getElementById('plantHeight').value
+        let dateFound = document.getElementById('dateSeen').value
+        let fruitOrSeeds = document.getElementById('hasFruitsOrSeeds').value
+        let hasFlowers = document.getElementById('hasFlowers').value
+        let hasLeaves = document.getElementById('hasLeaves').value
+        let dbPedia = document.getElementById('dbPediaUri').value
+        let plantColour = document.getElementById('flowerColor').value
+        let plantSpread = document.getElementById('plantSpread').value
+        let sunExposure = document.getElementById('sunExposure').value
 
-
-    const action = db.transaction('sightings', 'readwrite')
-    const store = action.objectStore('sightings')
-    queryData = {nickname: nickName,
-        commonname: commonName,
-        scientificname: scientificName,
-        description: plantDescription,
-        length: plantLength,
-        height: plantHeight,
-        datefound: dateFound,
-        hasflowers: hasFlowers,
-        fruitorseeds: fruitOrSeeds,
-        hasleaves: hasLeaves,
-        dbpedia: dbPedia,
-        colour: plantColour,
-        exposure: sunExposure,
-        spread: plantSpread
-    }
-    let query = store.add(queryData)
-    query.onsuccess = function (event) {
-        console.log("added")
-        query.onerror = function (event) {
-            console.log(event.target.errorCode) //Produces an error if one occurs
+        const action = db.transaction('sightings', 'readwrite')
+        const store = action.objectStore('sightings')
+        let queryData = {
+            nickname: nickName,
+            commonname: commonName,
+            scientificname: scientificName,
+            description: plantDescription,
+            length: plantLength,
+            height: plantHeight,
+            datefound: dateFound,
+            hasflowers: hasFlowers,
+            fruitorseeds: fruitOrSeeds,
+            hasleaves: hasLeaves,
+            dbpedia: dbPedia,
+            colour: plantColour,
+            exposure: sunExposure,
+            spread: plantSpread
+        }
+        let query = store.add(queryData)
+        query.onsuccess = function (event) {
+            console.log("added")
+            query.onerror = function (event) {
+                console.log(event.target.errorCode) //Produces an error if one occurs
+            }
         }
     }
 }
+
 //
 
 const sightingIndexedDB = window.indexedDB.open("Sightings")
 sightingIndexedDB.addEventListener("upgradeneeded", handleUpgradeOne)
 sightingIndexedDB.addEventListener("success", handleSuccessOne)
 sightingIndexedDB.addEventListener("error", handleErrorOne)
-function nowOnline(){
+
+function nowOnline() {
     console.log('window is online')
+    form.action = "/submit-plant-sighting";
 
     const db = sightingIndexedDB.result
     const objectStore = db.transaction('sightings', 'readwrite').objectStore('sightings')
@@ -73,7 +79,6 @@ function nowOnline(){
         const cursor = event.target.result
         if (cursor) {
             console.log(cursor)
-
             let newSighting = {
                 dateSeen: new Date(cursor.value.datefound),
                 userNickname: cursor.value.nickname,
@@ -99,11 +104,8 @@ function nowOnline(){
                     plantSpread: cursor.value.spread,
                 }
             }
-            console.log(newSighting)
-            await newSighting.save();
 
-            console.log('saved')
-
+            document.getElementById('addSighting').click()
             objectStore.delete(cursor.key)
             cursor.continue()
         } else {
@@ -112,4 +114,14 @@ function nowOnline(){
     }
 
 }
+
+
 window.addEventListener('online', nowOnline)
+
+
+let form = document.getElementById('plantSightingForm')
+console.log(form.action)
+if (window.navigator.onLine === false) {
+    form.action = "/offline-post";
+    console.log(form.action)
+}

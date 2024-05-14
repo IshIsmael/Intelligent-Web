@@ -16,6 +16,9 @@
     <script defer src="/javascripts/map.js"></script>
     <script defer src="/javascripts/autocap.js"></script>
     <script defer src="/javascripts/nocoord.js"></script>
+    <script defer src="/javascripts/sighting.js" type="module"></script>
+
+
   </head>
   <%- include('./partials/header.ejs'); -%>
   <body>
@@ -23,8 +26,9 @@
       <div id="checkNickname">
       <form
         id="plantSightingForm"
-        action="/submit-plant-sighting"
+        name="plantSightingForm"
         method="post"
+        action="/submit-plant-sighting"
         enctype="multipart/form-data"
       >
         <h1>Add a Plant Sighting</h1>
@@ -157,7 +161,7 @@
         <label for="dbPediaUri">DBPedia URI:</label>
         <input type="text" id="dbPediaUri" name="dbPediaUri" />
 
-        <input type="submit" value="Add Sighting" />
+        <input type="submit" value="Add Sighting" id="addSighting" />
       </form>
       </div>
       <%- include('./partials/enter_nickname.ejs') -%>

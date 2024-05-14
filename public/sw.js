@@ -6,17 +6,21 @@ self.addEventListener('install', (event) => {
         try{
             cache.addAll([
                 '/',
-                '../create',
-                '../forum',
-                '../nickname',
+                '/create',
+                '/forum',
+                '/images/Logo.png',
+                '/javascripts/forum.js',
                 '/javascripts/index.js',
-                '/javascripts/map.js',
-                '/javascripts/script.js',
                 '/javascripts/nickname.js',
+                '/javascripts/script.js',
+                '/javascripts/map.js',
+                '/javascripts/autocap.js',
+                '/javascripts/nocoord.js',
                 '/javascripts/sighting.js',
-                '/stylesheets/footer.css',
-                '/stylesheets/form.css',
                 '/stylesheets/header.css',
+                '/stylesheets/footer.css',
+                '/stylesheets/nickname.css',
+                '/stylesheets/form.css',
                 '/stylesheets/style.css',
             ]);
             console.log('[Service Worker] : Installed');
@@ -24,7 +28,7 @@ self.addEventListener('install', (event) => {
             console.log('Error Service Worker Install');
         }
 
-    }))
+    }));
 });
 
 // Fetch event to fetch from cache first
