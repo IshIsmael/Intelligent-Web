@@ -79,6 +79,8 @@ select {
 #EnterNickname {
   margin: 0;
   text-align: center;
+  width: 75%;
+  margin: auto;
 }
 
 #EnterNickname > form {

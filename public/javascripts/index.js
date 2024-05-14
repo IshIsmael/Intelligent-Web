@@ -16,8 +16,6 @@ const firstSection = document.querySelector('.plants-section');
 
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(async pos => {
-    console.log(pos);
-
     const url = `/closest-plants/${[
       pos.coords.longitude,
       pos.coords.latitude,
@@ -27,8 +25,6 @@ if (navigator.geolocation) {
     const response = await apiCall.json();
 
     const closestPlants = response.plants;
-
-    console.log(closestPlants);
 
     const html = `
     <div class="plants-section">
