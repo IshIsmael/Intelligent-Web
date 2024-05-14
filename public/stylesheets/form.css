@@ -52,3 +52,20 @@ input[type='submit']:hover {
   font-weight: bold;
   padding: 10px 0px;
 }
+
+@media only screen and (max-width: 800px) {
+  .checkboxes {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .checkboxes {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .checkbox > label {
+    width: 150px;
+  }
+}

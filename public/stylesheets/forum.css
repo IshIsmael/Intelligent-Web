@@ -39,7 +39,7 @@
 img {
   height: 200px;
   object-fit: cover;
-  width: 225px;
+  width: 100%;
 }
 
 .card {
@@ -62,8 +62,8 @@ img {
 
 .entry {
   background-color: white;
-
   border-radius: 10px;
+  width: 31%;
 }
 
 .entry-info {
@@ -83,4 +83,35 @@ img {
 .download-plant {
   margin: 10px;
   cursor: pointer;
+}
+
+@media only screen and (max-width: 800px) {
+  .sort-and-filter {
+    flex-direction: column;
+  }
+
+  .entry {
+    width: 47%;
+  }
+}
+
+@media only screen and (max-width: 580px) {
+  .filter-options {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #applyFiltersBtn {
+    margin-top: 5px;
+  }
+
+  .entry {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 1040px) {
+  .entry {
+    width: 225px;
+  }
 }

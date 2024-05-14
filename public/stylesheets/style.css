@@ -41,9 +41,10 @@ h1 {
   text-align: center;
 }
 
-main {
+.content {
   margin: 20px auto;
-  width: 1000px;
+  width: 90%;
+  max-width: 1000px;
   padding: 20px;
   background-color: var(--container-color);
   border-radius: 5px;
@@ -84,4 +85,38 @@ select {
   display: flex;
   flex-direction: row;
   gap: 10px;
+}
+
+@media only screen and (min-width: 1040px) {
+  .content {
+    width: 1000px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  body {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+
+  main {
+    grid-row-start: 1;
+    height: 100%;
+    overflow: auto;
+  }
+
+  #company-name {
+    display: none;
+  }
+
+  #navigation-menu {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .navigation-link {
+    width: 100%;
+    text-align: center;
+  }
 }

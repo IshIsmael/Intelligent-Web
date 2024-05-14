@@ -15,107 +15,112 @@
   </head>
   <body>
     <%- include('partials/header') %>
-
     <main>
-      <div id="onlineStatus">
-        <div class="sort-and-filter">
-          <div class="sorting-section">
-            <span>
-              <label for="sortSelect">Sort by</label>
-              <select id="sortSelect" class="form-control">
-                <option value="default">Default (Alphabetical)</option>
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
-              </select>
-            </span>
-            <span>
-              <label for="sortSelect">Verification Sort</label>
-              <select id="statusFilter">
-                <option value="">All</option>
-                <option value="Pending Confirmation">
-                  Pending Confirmation
-                </option>
-                <option value="Verified">Verified</option>
-              </select>
-            </span>
-          </div>
-          <div class="filter-section">
-            <div>Filter by Characteristics:</div>
-            <div class="filter-options">
-              <div class="filter-check-label">
-                <input
-                  class="filter-check"
-                  type="checkbox"
-                  value="hasFlowers"
-                  id="hasFlowersFilter"
-                />
-                <label class="filter-label" for="hasFlowersFilter">
-                  Has Flowers
-                </label>
-              </div>
-              <div class="filter-check-label">
-                <input
-                  class="filter-check"
-                  type="checkbox"
-                  value="hasLeaves"
-                  id="hasLeavesFilter"
-                />
-                <label class="filter-label" for="hasLeavesFilter">
-                  Has Leaves
-                </label>
-              </div>
-              <div class="filter-check-label">
-                <input
-                  class="filter-check"
-                  type="checkbox"
-                  value="hasFruitsOrSeeds"
-                  id="hasFruitsOrSeedsFilter"
-                />
-                <label class="filter-label" for="hasFruitsOrSeedsFilter">
-                  Has Fruits or Seeds
-                </label>
-              </div>
+      <section class="content">
+        <div id="onlineStatus">
+          <div class="sort-and-filter">
+            <div class="sorting-section">
+              <span>
+                <label for="sortSelect">Sort by</label>
+                <select id="sortSelect" class="form-control">
+                  <option value="default">Default (Alphabetical)</option>
+                  <option value="newest">Newest</option>
+                  <option value="oldest">Oldest</option>
+                </select>
+              </span>
+              <span>
+                <label for="sortSelect">Verification Sort</label>
+                <select id="statusFilter">
+                  <option value="">All</option>
+                  <option value="Pending Confirmation">
+                    Pending Confirmation
+                  </option>
+                  <option value="Verified">Verified</option>
+                </select>
+              </span>
             </div>
-            <button id="applyFiltersBtn" class="btn btn-primary">Apply</button>
-          </div>
-        </div>
-
-        <div class="plants-section">
-          <h1>Plant Forum</h1>
-          <% if (plants.length > 0) { %>
-          <div class="entries">
-            <% plants.forEach(plant => { %>
-            <div class="entry">
-              <img
-                src="<%= plant.identification.photo %>"
-                class="card-img-top"
-                alt="Plant Image"
-                onclick="window.location.href = 'plant-info/<%= plant._id %>'"
-              />
-              <div
-                class="entry-info"
-                onclick="window.location.href = 'plant-info/<%= plant._id %>'"
-              >
-                <p class="entry-title">
-                  <%= plant.identification.commonName %>
-                </p>
-                <p>Status: <%= plant.identification.confirmation %></p>
+            <div class="filter-section">
+              <div>Filter by Characteristics:</div>
+              <div class="filter-options">
+                <div class="filter-check-label">
+                  <input
+                    class="filter-check"
+                    type="checkbox"
+                    value="hasFlowers"
+                    id="hasFlowersFilter"
+                  />
+                  <label class="filter-label" for="hasFlowersFilter">
+                    Has Flowers
+                  </label>
+                </div>
+                <div class="filter-check-label">
+                  <input
+                    class="filter-check"
+                    type="checkbox"
+                    value="hasLeaves"
+                    id="hasLeavesFilter"
+                  />
+                  <label class="filter-label" for="hasLeavesFilter">
+                    Has Leaves
+                  </label>
+                </div>
+                <div class="filter-check-label">
+                  <input
+                    class="filter-check"
+                    type="checkbox"
+                    value="hasFruitsOrSeeds"
+                    id="hasFruitsOrSeedsFilter"
+                  />
+                  <label class="filter-label" for="hasFruitsOrSeedsFilter">
+                    Has Fruits or Seeds
+                  </label>
+                </div>
               </div>
-              <button
-                class="download-plant"
-                onclick=" downloadPlant(<%=JSON.stringify(plant)%>)"
-              >
-                Download Plant
+              <button id="applyFiltersBtn" class="btn btn-primary">
+                Apply
               </button>
             </div>
-            <% }); %>
           </div>
-          <% } else { %>
-          <p>No plants have been added yet :/</p>
-          <% } %>
+
+          <div class="plants-section">
+            <h1>Plant Forum</h1>
+            <% if (plants.length > 0) { %>
+            <div class="entries">
+              <% plants.forEach(plant => { %>
+              <div class="entry">
+                <img
+                  src="<%= plant.identification.photo %>"
+                  class="card-img-top"
+                  alt="Plant Image"
+                  onclick="window.location.href = 'plant-info/<%= plant._id %>'"
+                />
+                <div
+                  class="entry-info"
+                  onclick="window.location.href = 'plant-info/<%= plant._id %>'"
+                >
+                  <p class="entry-title">
+                    <%= plant.identification.commonName %>
+                  </p>
+                  <p>Status: <%= plant.identification.confirmation %></p>
+                </div>
+                <button
+                  class="download-plant"
+                  onclick=" downloadPlant(<%=JSON.stringify(plant)%>)"
+                >
+                  Download Plant
+                </button>
+              </div>
+              <% }); %>
+            </div>
+            <% } else { %>
+            <p>No plants have been added yet :/</p>
+            <% } %>
+          </div>
         </div>
-      </div>
-      <div id="offlineStatus"><%- include('partials/offline_forum.ejs') %></div>
+        <div id="offlineStatus">
+          <%- include('partials/offline_forum.ejs') %>
+        </div>
+      </section>
     </main>
 
     <!-- Footer -->

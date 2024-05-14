@@ -26,114 +26,115 @@
   <body>
     <%- include('partials/header') %>
     <main>
-      <section class="checkNickname"></section>
-      <h1 class="title">
-        <div style="width: 60px"></div>
-        <%= plant.identification.commonName %> <% if
-        (plant.identification.confirmation === 'Pending Confirmation') { %>
-        <button id="editButton">Edit</button>
-        <% } %>
-      </h1>
-      <div class="both-columns">
-        <div class="details">
-          <p class="details-divider">Main Info</p>
+      <section class="checkNickname content">
+        <h1 class="title">
+          <div style="width: 60px"></div>
+          <%= plant.identification.commonName %> <% if
+          (plant.identification.confirmation === 'Pending Confirmation') { %>
+          <button id="editButton">Edit</button>
+          <% } %>
+        </h1>
+        <div class="both-columns">
+          <div class="details">
+            <p class="details-divider">Main Info</p>
 
-          <p class="details-table">
-            <span class="details-label">Scientific Name</span>
-            <span class="details-value">
-              <%=plant.identification.scientificName %>
-            </span>
-          </p>
+            <p class="details-table">
+              <span class="details-label">Scientific Name</span>
+              <span class="details-value">
+                <%=plant.identification.scientificName %>
+              </span>
+            </p>
 
-          <p class="details-table">
-            <span class="details-label">Description</span>
-            <span class="details-value">
-              <%= plant.identification.description%>
-            </span>
-          </p>
+            <p class="details-table">
+              <span class="details-label">Description</span>
+              <span class="details-value">
+                <%= plant.identification.description%>
+              </span>
+            </p>
 
-          <p class="details-divider">Characteristics</p>
+            <p class="details-divider">Characteristics</p>
 
-          <p class="details-table">
-            <span class="details-label">Sun Exposure</span>
-            <%= plant.plantCharacteristics.sunExposure %>
-          </p>
+            <p class="details-table">
+              <span class="details-label">Sun Exposure</span>
+              <%= plant.plantCharacteristics.sunExposure %>
+            </p>
 
-          <p class="details-table">
-            <span class="details-label">Flower Color</span>
-            <%= plant.plantCharacteristics.flowerColor %>
-          </p>
+            <p class="details-table">
+              <span class="details-label">Flower Color</span>
+              <%= plant.plantCharacteristics.flowerColor %>
+            </p>
 
-          <p class="details-table">
-            <span class="details-label">Plant Length</span>
-            <%= plant.plantCharacteristics.plantLength %>cm
-          </p>
+            <p class="details-table">
+              <span class="details-label">Plant Length</span>
+              <%= plant.plantCharacteristics.plantLength %>cm
+            </p>
 
-          <p class="details-table">
-            <span class="details-label">Plant Height</span>
-            <%= plant.plantCharacteristics.plantHeight %>cm
-          </p>
+            <p class="details-table">
+              <span class="details-label">Plant Height</span>
+              <%= plant.plantCharacteristics.plantHeight %>cm
+            </p>
 
-          <p class="details-table">
-            <span class="details-label">Plant Spread</span>
-            <%= plant.plantCharacteristics.plantSpread %>cm
-          </p>
+            <p class="details-table">
+              <span class="details-label">Plant Spread</span>
+              <%= plant.plantCharacteristics.plantSpread %>cm
+            </p>
 
-          <p class="details-table">
-            <span class="details-label">Has Flowers</span>
-            <%= plant.plantCharacteristics.hasFlowers ?
-            String.fromCharCode(10003) : String.fromCharCode(10539) %>
-          </p>
+            <p class="details-table">
+              <span class="details-label">Has Flowers</span>
+              <%= plant.plantCharacteristics.hasFlowers ?
+              String.fromCharCode(10003) : String.fromCharCode(10539) %>
+            </p>
 
-          <p class="details-table">
-            <span class="details-label">Has Leaves</span>
-            <%= plant.plantCharacteristics.hasLeaves ?
-            String.fromCharCode(10003) : String.fromCharCode(10539) %>
-          </p>
+            <p class="details-table">
+              <span class="details-label">Has Leaves</span>
+              <%= plant.plantCharacteristics.hasLeaves ?
+              String.fromCharCode(10003) : String.fromCharCode(10539) %>
+            </p>
 
-          <p class="details-table">
-            <span class="details-label">Has Fruits or Seeds</span>
-            <%= plant.plantCharacteristics.hasFruitsOrSeeds ?
-            String.fromCharCode(10003) : String.fromCharCode(10539) %>
-          </p>
+            <p class="details-table">
+              <span class="details-label">Has Fruits or Seeds</span>
+              <%= plant.plantCharacteristics.hasFruitsOrSeeds ?
+              String.fromCharCode(10003) : String.fromCharCode(10539) %>
+            </p>
 
-          <div id="map"></div>
-        </div>
+            <div id="map"></div>
+          </div>
 
-        <div class="image-chat">
-          <p class="details-divider chat-switch">
-            Click to Switch Between Chat and Image
-          </p>
+          <div class="image-chat">
+            <p class="details-divider chat-switch">
+              Click to Switch Between Chat and Image
+            </p>
 
-          <img
-            class="image hidden"
-            src="/<%= plant.identification.photo %>"
-            alt="Plant Image"
-          />
-          <div class="comments">
-            <div class="messageBox">
-              <% plant.comments.forEach( message => { %>
-              <div class="message">
-                <div>
-                  <strong><%= message.userNickname %>:</strong> <%=
-                  message.message %>
+            <img
+              class="image hidden"
+              src="/<%= plant.identification.photo %>"
+              alt="Plant Image"
+            />
+            <div class="comments">
+              <div class="messageBox">
+                <% plant.comments.forEach( message => { %>
+                <div class="message">
+                  <div>
+                    <strong><%= message.userNickname %>:</strong> <%=
+                    message.message %>
+                  </div>
+                  <div>
+                    <%= message.date.toLocaleDateString('en-uk', { minute:
+                    'numeric', hour: 'numeric', }) %>
+                  </div>
                 </div>
-                <div>
-                  <%= message.date.toLocaleDateString('en-uk', { minute:
-                  'numeric', hour: 'numeric', }) %>
-                </div>
+                <% }) %>
               </div>
-              <% }) %>
-            </div>
 
-            <form class="comments-form">
-              <input class="commentsInput" type="text" />
-              <button type="submit" class="button">Send</button>
-            </form>
+              <form class="comments-form">
+                <input class="commentsInput" type="text" />
+                <button type="submit" class="button">Send</button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-      <%- include('./partials/enter_nickname.ejs'); -%>
+        <%- include('./partials/enter_nickname.ejs'); -%>
+      </section>
     </main>
 
     <!-- Footer -->
