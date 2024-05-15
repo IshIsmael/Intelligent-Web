@@ -3,6 +3,8 @@ const PlantSighting = require('../models/plantSighting');
 
 exports.createSighting = async (req, res) => {
   try {
+    console.log(req.body);
+
     const {
       dateSeen,
       commonName,

@@ -22,15 +22,14 @@
     <script defer src="/javascripts/autocap.js"></script>
     <script defer src="/javascripts/nocoord.js"></script>
     <script defer src="/javascripts/nickname.js"></script>
+    <script defer src="/javascripts/create.js"></script>
   </head>
   <%- include('./partials/header.ejs'); -%>
   <body>
     <main>
       <form
         id="plantSightingForm"
-        action="/submit-plant-sighting"
-        method="post"
-        enctype="multipart/form-data"
+        onsubmit="submitForm(event)"
         class="checkNickname content"
       >
         <h1>Add a Plant Sighting</h1>

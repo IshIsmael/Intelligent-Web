@@ -57,19 +57,40 @@ self.addEventListener('install', event => {
   event.waitUntil(addResourcesToCache(['/']));
 });
 
+const putInCache = async (request, response) => {
+  const cache = await caches.open('v1');
+  await cache.put(request, response);
+};
+
+const cacheFirst = async request => {
+  const responseFromCache = await caches.match(request);
+  if (responseFromCache) {
+    return responseFromCache;
+  }
+  const responseFromNetwork = await fetch(request);
+  putInCache(request, responseFromNetwork.clone());
+  return responseFromNetwork;
+};
+
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    (async () => {
-      const cache = await caches.open('v1');
-      const cachedResponse = await cache.match(event.request);
-      if (cachedResponse) {
-        console.log('Service Worker: Fetching from Cache: ', event.request.url);
-        return cachedResponse;
-      } else {
-        console.log('Service Worker: Fetching from URL: ', event.request.url);
-        addResourcesToCache([event.request.url]);
-        return fetch(event.request);
-      }
-    })()
-  );
+  event.respondWith(cacheFirst(event.request));
 });
+
+// self.addEventListener('fetch', event => {
+//   console.log(event.request.url);
+
+//   event.respondWith(
+//     (async () => {
+//       if (cachedResponse) {
+//         console.log('Service Worker: Fetching from Cache: ', event.request.url);
+//         return cachedResponse;
+//       } else {
+//         console.log('Service Worker: Fetching from URL: ', event.request.url);
+//         if (!event.request.url.includes('newMessage')) {
+//           addResourcesToCache([event.request.url]);
+//         }
+//         return fetch(event.request);
+//       }
+//     })()
+//   );
+// });
