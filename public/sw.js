@@ -34,6 +34,10 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
-  console.log(event);
+  // console.log(event);
   event.respondWith(networkFirst(event.request));
+});
+
+self.addEventListener('sync', event => {
+  console.log('pokemon');
 });

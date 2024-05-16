@@ -9,10 +9,7 @@ async function addToDb(obj) {
     const url = '/submit-plant-sighting';
     const options = {
       method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(obj),
+      body: obj,
     };
 
     await fetch(url, options);
@@ -26,12 +23,10 @@ const submitForm = function (e) {
   e.stopImmediatePropagation();
 
   const newSighting = new FormData(e.target);
-  const sightingObj = {};
-  newSighting.forEach((value, key) => (sightingObj[key] = value));
 
   if (navigator.onLine) {
-    addToDb(sightingObj);
-    window.location.href = '/forum';
+    addToDb(newSighting);
+    // window.location.href = '/forum';
   } else {
     const db = sightingIndexedDB.result;
 
