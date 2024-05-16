@@ -4,8 +4,6 @@ const addResourcesToCache = async resources => {
 };
 
 const putInCache = async (request, response) => {
-  if (request.method === 'POST' || request.method === 'PUT') return;
-
   const cache = await caches.open('v1');
   await cache.put(request, response);
 };
@@ -13,7 +11,17 @@ const putInCache = async (request, response) => {
 const networkFirst = async request => {
   try {
     const responseFromNetwork = await fetch(request);
-    putInCache(request, responseFromNetwork.clone());
+
+    if (
+      !(
+        request.method === 'POST' ||
+        request.method === 'PUT' ||
+        request.url.includes('transport')
+      )
+    ) {
+      putInCache(request, responseFromNetwork.clone());
+    }
+
     return responseFromNetwork;
   } catch (err) {
     const responseFromCache = await caches.match(request);
@@ -26,5 +34,6 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('fetch', event => {
+  console.log(event);
   event.respondWith(networkFirst(event.request));
 });

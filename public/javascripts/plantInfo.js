@@ -36,7 +36,75 @@ socket.emit('joinRoom', plantInformation._id);
 
 messageBox.scrollTo(0, messageBox.scrollHeight);
 
-const newMessage = async function (messageObj) {
+const messagesDB = window.indexedDB.open('messages');
+
+messagesDB.onerror = event => {
+  console.log(event.target.errorCode);
+};
+
+messagesDB.onupgradeneeded = event => {
+  const db = event.target.result;
+
+  const objectStore = db.createObjectStore('messages', { keyPath: 'id' });
+};
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  e.stopImmediatePropagation();
+
+  const messageObj = {
+    message: input.value,
+    date: new Date(),
+    userNickname,
+  };
+
+  if (input.value === '') return;
+
+  if (navigator.onLine) {
+    insertMongoMessage(messageObj);
+    input.value = '';
+  } else {
+    const objectStore = messagesDB.result
+      .transaction('messages', 'readwrite')
+      .objectStore('messages');
+
+    const request = objectStore.get(plantInformation._id);
+
+    request.onsuccess = event => {
+      const obj = event.target.result;
+
+      if (obj) {
+        obj.messages.push(messageObj);
+        objectStore.put(obj);
+      } else {
+        objectStore.add({ id: plantInformation._id, messages: [messageObj] });
+      }
+
+      input.value = '';
+      insertHTMLMessage(messageObj);
+    };
+  }
+});
+
+const insertHTMLMessage = function (messageObj) {
+  const { message, userNickname, date } = messageObj;
+
+  console.log(messageObj);
+
+  const currentTime = new Date(date).toLocaleDateString('en-uk', {
+    minute: 'numeric',
+    hour: 'numeric',
+    second: 'numeric',
+  });
+
+  const messageHTML = `<div class='message'> <div> <strong> ${userNickname}: </strong> ${message} </div> 
+  <div> ${currentTime} </div> </div> `;
+
+  messageBox.insertAdjacentHTML('beforeend', messageHTML);
+  messageBox.scrollTo(0, messageBox.scrollHeight);
+};
+
+const insertMongoMessage = async function (messageObj) {
   try {
     const url = '/newMessage';
     const options = {
@@ -50,40 +118,39 @@ const newMessage = async function (messageObj) {
       }),
     };
 
+    socket.emit('message', messageObj);
     await fetch(url, options);
   } catch (err) {
     console.log(err);
   }
 };
 
-socket.on('message', arg => {
-  const messageTime = new Date();
+const syncMessages = function () {
+  socket.emit('joinRoom', plantInformation._id);
 
-  const currentTime = messageTime.toLocaleDateString('en-uk', {
-    minute: 'numeric',
-    hour: 'numeric',
-  });
+  const objectStore = messagesDB.result
+    .transaction('messages', 'readwrite')
+    .objectStore('messages');
 
-  const messageHTML = `<div class='message'> <div> <strong> ${userNickname}: </strong> ${arg} </div> 
-  <div> ${currentTime} </div> </div> `;
+  const request = objectStore.getAll();
 
-  messageBox.insertAdjacentHTML('beforeend', messageHTML);
-  messageBox.scrollTo(0, messageBox.scrollHeight);
-});
+  request.onsuccess = () => {
+    request.result.forEach(obj => {
+      obj.messages.forEach(messageObj => {
+        insertMongoMessage(messageObj);
+      });
 
-form.addEventListener('submit', e => {
-  e.preventDefault();
-
-  if (input.value != '') {
-    newMessage({
-      message: input.value,
-      date: new Date(),
-      userNickname,
+      objectStore.delete(obj.id);
     });
-    socket.emit('message', input.value);
-    input.value = '';
-  }
+    location.reload();
+  };
+};
+
+socket.on('message', arg => {
+  insertHTMLMessage(arg);
 });
+
+window.addEventListener('online', syncMessages);
 
 //////////// Edit Button
 if (editButton) {

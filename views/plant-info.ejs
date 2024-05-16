@@ -17,7 +17,7 @@
       src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
     ></script>
 
-    <script defer src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="/socket.io/client-dist/socket.io.js"></script>
 
     <script defer src="/javascripts/plantInfo.js"></script>
     <script defer src="/javascripts/nickname.js"></script>
@@ -112,7 +112,8 @@
             />
             <div class="comments">
               <div class="messageBox">
-                <% plant.comments.forEach( message => { %>
+                <% plant.comments.sort((a, b) => a.date - b.date).forEach(
+                message => { %>
                 <div class="message">
                   <div>
                     <strong><%= message.userNickname %>:</strong> <%=
@@ -120,7 +121,7 @@
                   </div>
                   <div>
                     <%= message.date.toLocaleDateString('en-uk', { minute:
-                    'numeric', hour: 'numeric', }) %>
+                    'numeric', hour: 'numeric', second: 'numeric' }) %>
                   </div>
                 </div>
                 <% }) %>
