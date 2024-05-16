@@ -135,10 +135,10 @@ const syncPosts = function () {
         for (const key in post) {
           form_data.append(key, post[key]);
         }
-        addToDb(form_data);
+        // addToDb(form_data);
       });
 
-      objectStore.clear();
+      // objectStore.clear();
     };
   };
 };

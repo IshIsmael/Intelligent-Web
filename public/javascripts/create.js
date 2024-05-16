@@ -1,6 +1,5 @@
 // Opening IndexedDB
 const sightingIndexedDB = window.indexedDB.open('sightings');
-sightingIndexedDB.addEventListener('success', handleSuccessOne);
 sightingIndexedDB.addEventListener('upgradeneeded', handleUpgradeOne);
 sightingIndexedDB.addEventListener('error', handleErrorOne);
 
@@ -38,8 +37,8 @@ const submitForm = function (e) {
   });
 
   if (navigator.onLine) {
-    addToDb(newSighting);
-    window.location.href = '/forum';
+    // addToDb(newSighting);
+    // window.location.href = '/forum';
   } else {
     const db = sightingIndexedDB.result;
 

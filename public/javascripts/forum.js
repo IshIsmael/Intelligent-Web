@@ -66,3 +66,50 @@ function getSelectedFilters() {
 
   return filters.slice(0, -1);
 }
+
+const sightingIndexedDB = window.indexedDB.open('sightings');
+
+const entries = document.querySelector('.entries');
+
+const insertHTML = function (plants) {
+  let html = '';
+
+  plants.forEach(plant => {
+    html += `
+    <div class="entry">
+    <img
+    src="images/Logo.png"
+    class="card-img-top"
+    alt="Plant Image"
+    onclick="window.location.href = 'plant-info/'"
+    />
+    <div
+    class="entry-info"
+    onclick="window.location.href = 'plant-info/'"
+    >
+    <p class="entry-title">
+        ${plant.commonName}
+    </p>
+    <p>Status: ${plant.confirmation} </p>
+    </div>
+    </div>
+    `;
+  });
+
+  return html;
+};
+
+sightingIndexedDB.onsuccess = event => {
+  const db = event.target.result;
+
+  const objectStore = db
+    .transaction('sightings', 'readwrite')
+    .objectStore('sightings');
+
+  const request = objectStore.getAll();
+
+  request.onsuccess = () => {
+    // console.log(request.result);
+    entries.insertAdjacentHTML('beforeend', insertHTML(request.result));
+  };
+};
