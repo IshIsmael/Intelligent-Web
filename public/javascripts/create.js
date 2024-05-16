@@ -18,44 +18,44 @@ async function addToDb(obj) {
   }
 }
 
+async function syncPostLater() {
+  const registration = await navigator.serviceWorker.ready;
+  try {
+    await registration.sync.register('sync-posts');
+  } catch {
+    console.log('Background Sync could not be registered!');
+  }
+}
+
 const submitForm = function (e) {
   e.preventDefault();
   e.stopImmediatePropagation();
 
   const newSighting = new FormData(e.target);
+  const object = {};
+  newSighting.forEach(function (value, key) {
+    object[key] = value;
+  });
 
   if (navigator.onLine) {
     addToDb(newSighting);
-    // window.location.href = '/forum';
+    window.location.href = '/forum';
   } else {
     const db = sightingIndexedDB.result;
 
     const action = db.transaction('sightings', 'readwrite');
     const store = action.objectStore('sightings');
 
-    let query = store.add(sightingObj);
+    let query = store.add(object);
     query.onsuccess = function (event) {
       console.log('added');
+      syncPostLater();
       query.onerror = function (event) {
         console.log(event.target.errorCode); //Produces an error if one occurs
       };
     };
   }
 };
-
-window.addEventListener('online', syncIndexToMongo);
-
-function syncIndexToMongo() {
-  const db = sightingIndexedDB.result;
-  const objectStore = db
-    .transaction('sightings', 'readwrite')
-    .objectStore('sightings')
-    .getAll();
-
-  objectStore.onsuccess = () => {
-    addToDb(objectStore.result[0]);
-  };
-}
 
 function handleSuccessOne(ev) {
   console.log('Opened..'); // USED FOR TESTING

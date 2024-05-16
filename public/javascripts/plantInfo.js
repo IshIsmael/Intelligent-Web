@@ -82,9 +82,20 @@ form.addEventListener('submit', e => {
 
       input.value = '';
       insertHTMLMessage(messageObj);
+
+      syncMessagesLater();
     };
   }
 });
+
+async function syncMessagesLater() {
+  const registration = await navigator.serviceWorker.ready;
+  try {
+    await registration.sync.register('sync-messages');
+  } catch {
+    console.log('Background Sync could not be registered!');
+  }
+}
 
 const insertHTMLMessage = function (messageObj) {
   const { message, userNickname, date } = messageObj;
@@ -124,33 +135,6 @@ const insertMongoMessage = async function (messageObj) {
     console.log(err);
   }
 };
-
-const syncMessages = function () {
-  socket.emit('joinRoom', plantInformation._id);
-
-  const objectStore = messagesDB.result
-    .transaction('messages', 'readwrite')
-    .objectStore('messages');
-
-  const request = objectStore.getAll();
-
-  request.onsuccess = () => {
-    request.result.forEach(obj => {
-      obj.messages.forEach(messageObj => {
-        insertMongoMessage(messageObj);
-      });
-
-      objectStore.delete(obj.id);
-    });
-    location.reload();
-  };
-};
-
-socket.on('message', arg => {
-  insertHTMLMessage(arg);
-});
-
-window.addEventListener('online', syncMessages);
 
 //////////// Edit Button
 if (editButton) {
