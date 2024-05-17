@@ -11,6 +11,7 @@
 .entry {
   background-color: white;
   border-radius: 10px;
+  max-width: 225px;
 }
 
 .entry-info {

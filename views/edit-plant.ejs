@@ -2,6 +2,8 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Plant Sighting</title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <link rel="stylesheet" href="/stylesheets/form.css" />
@@ -15,22 +17,24 @@
         id="editPlantForm"
         action="/edit-plant-sighting/<%= plant._id %>"
         method="post"
+        class="content"
       >
         <h1>Edit Plant Sighting</h1>
 
         <label for="knowsPlantName">Select this if you know the plant</label>
-        <input 
-        type="checkbox" 
-        id="knowsPlantName" 
-        name="knowsPlantName" 
-        onchange="toggleDBpediaSearch()" 
+        <input
+          type="checkbox"
+          id="knowsPlantName"
+          name="knowsPlantName"
+          onchange="toggleDBpediaSearch()"
         />
 
-        <div id="dbpediaSearchContainer" style="display: none;">
+        <div id="dbpediaSearchContainer" style="display: none">
           <label for="plantSearch">Search for a Plant from DBpedia:</label>
           <p class="search-info">
-            The search will give you suggestions as you type. Click on a suggestion to auto-fill the form with the plant's details.
-            Please only try this if online.
+            The search will give you suggestions as you type. Click on a
+            suggestion to auto-fill the form with the plant's details. Please
+            only try this if online.
           </p>
           <input
             placeholder="Search Plant"
@@ -52,11 +56,12 @@
           required
         />
 
-        <input type="submit" value="Update Sighting" />
+        <button style="margin-top: 10px" type="submit" value="Update Sighting">
+          Edit Sighting
+        </button>
       </form>
     </main>
   </body>
-  
 
   <%- include('./partials/footer.ejs'); -%>
 </html>

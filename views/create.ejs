@@ -91,30 +91,32 @@
           required
         />
 
-        <label for="knowsPlantName">Select this if you know the plant</label>
-        <input 
-        type="checkbox" 
-        id="knowsPlantName" 
-        name="knowsPlantName" 
-        onchange="toggleDBpediaSearch()" 
-        />
-
-        <div id="dbpediaSearchContainer" style="display: none;">
-          <label for="plantSearch">Search for a Plant from DBpedia:</label>
-          <p class="search-info">
-            The search will give you suggestions as you type. Click on a suggestion to auto-fill the form with the plant's details.
-            Please only try this if online.
-          </p>
+        <div id="dbpedia">
+          <label for="knowsPlantName">Select this if you know the plant</label>
           <input
-            placeholder="Search Plant"
-            type="text"
-            id="plantSearch"
-            name="plantSearch"
-            disabled
+            type="checkbox"
+            id="knowsPlantName"
+            name="knowsPlantName"
+            onchange="toggleDBpediaSearch()"
           />
-          <ul id="searchResults" class="dropdown"></ul>
-        </div>
 
+          <div id="dbpediaSearchContainer" style="display: none">
+            <label for="plantSearch">Search for a Plant from DBpedia:</label>
+            <p class="search-info">
+              The search will give you suggestions as you type. Click on a
+              suggestion to auto-fill the form with the plant's details. Please
+              only try this if online.
+            </p>
+            <input
+              placeholder="Search Plant"
+              type="text"
+              id="plantSearch"
+              name="plantSearch"
+              disabled
+            />
+            <ul id="searchResults" class="dropdown"></ul>
+          </div>
+        </div>
 
         <label for="commonName">Common Name:</label>
         <input

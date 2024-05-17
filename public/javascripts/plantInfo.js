@@ -60,32 +60,27 @@ form.addEventListener('submit', e => {
 
   if (input.value === '') return;
 
-  if (navigator.onLine) {
-    insertMongoMessage(messageObj);
+  const objectStore = messagesDB.result
+    .transaction('messages', 'readwrite')
+    .objectStore('messages');
+
+  const request = objectStore.get(plantInformation._id);
+
+  request.onsuccess = event => {
+    const obj = event.target.result;
+
+    if (obj) {
+      obj.messages.push(messageObj);
+      objectStore.put(obj);
+    } else {
+      objectStore.add({ id: plantInformation._id, messages: [messageObj] });
+    }
+
     input.value = '';
-  } else {
-    const objectStore = messagesDB.result
-      .transaction('messages', 'readwrite')
-      .objectStore('messages');
+    insertHTMLMessage(messageObj);
 
-    const request = objectStore.get(plantInformation._id);
-
-    request.onsuccess = event => {
-      const obj = event.target.result;
-
-      if (obj) {
-        obj.messages.push(messageObj);
-        objectStore.put(obj);
-      } else {
-        objectStore.add({ id: plantInformation._id, messages: [messageObj] });
-      }
-
-      input.value = '';
-      insertHTMLMessage(messageObj);
-
-      syncMessagesLater();
-    };
-  }
+    syncMessagesLater();
+  };
 });
 
 async function syncMessagesLater() {

@@ -8,19 +8,6 @@
 * {
   box-sizing: border-box;
 }
-#onlineStatus {
-  display: block;
-}
-#offlineStatus {
-  display: none;
-}
-
-#offline-card-text,
-#offline-card-title,
-#offline-view-details,
-.hidden {
-  display: none;
-}
 
 html,
 body {
@@ -124,7 +111,7 @@ select {
 }
 
 #searchResults li::before {
-  content: "🪴";
+  content: '🪴';
   margin-right: 8px;
   font-size: 18px;
 }

@@ -101,3 +101,17 @@ h1 {
 #map {
   height: 300px;
 }
+
+@media only screen and (max-width: 800px) {
+  .both-columns {
+    flex-direction: column;
+  }
+
+  .comments {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    margin-top: 20px;
+  }
+}

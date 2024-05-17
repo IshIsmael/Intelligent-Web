@@ -80,9 +80,8 @@
 
         <div class="plants-section">
           <h1>Plant Forum</h1>
-          <% if (plants.length > 0) { %>
           <div class="entries">
-            <% plants.forEach(plant => { %>
+            <% if (plants.length > 0) { %> <% plants.forEach(plant => { %>
             <div class="entry">
               <img
                 src="<%= plant.identification.photo %>"

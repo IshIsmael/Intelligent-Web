@@ -20,12 +20,20 @@ exports.createSighting = async (req, res) => {
       comments,
     } = req.body;
 
+    let comments1 = [];
+
+    if (comments) {
+      comments1 = JSON.parse(comments);
+    }
+
+    // console.log(JSON.parse(req.body.comments));
+
     // Sets the default status to Pending Confirmation
     let confirmation = 'Pending Confirmation';
     const knowsPlantName = req.body.knowsPlantName === 'on';
     if (knowsPlantName && commonName) {
       confirmation = 'Verified';
-      const dbpediaInfo = await fetchDBpediaInfo(commonName);
+      await fetchDBpediaInfo(commonName);
     }
 
     // default for no image uploaded, else image uploaded name added to image path
@@ -66,7 +74,7 @@ exports.createSighting = async (req, res) => {
         plantHeight: parseFloat(plantHeight),
         plantSpread: parseFloat(plantSpread),
       },
-      comments,
+      comments: comments1,
     });
 
     await newSighting.save();
@@ -129,7 +137,11 @@ exports.getPlantInfo = async (req, res) => {
       dbpediaInfo = await fetchDBpediaInfo(commonName);
     }
 
-    res.render('plant-info', { title: 'Plant Information', plant, dbpediaInfo });
+    res.render('plant-info', {
+      title: 'Plant Information',
+      plant,
+      dbpediaInfo,
+    });
   } catch (error) {
     console.error('Failed to fetch plant:', error);
     res.status(500).send('Error fetching plant from the database');
@@ -230,11 +242,16 @@ exports.closestPlants = async (req, res) => {
 
 async function fetchDBpediaInfo(commonName) {
   try {
-    const response = await fetch(`http://localhost:3000/dbpedia-plants?plant=${encodeURIComponent(commonName)}`, {
-      headers: {
-        'Accept': 'application/json',
-      },
-    });
+    const response = await fetch(
+      `http://localhost:3000/dbpedia-plants?plant=${encodeURIComponent(
+        commonName
+      )}`,
+      {
+        headers: {
+          Accept: 'application/json',
+        },
+      }
+    );
     const results = await response.json();
     return results[0] || {};
   } catch (error) {
@@ -243,7 +260,7 @@ async function fetchDBpediaInfo(commonName) {
   }
 }
 
-const plantQUERY = (userPlantInput) => {
+const plantQUERY = userPlantInput => {
   return `
     PREFIX dbo: <http://dbpedia.org/ontology/>
     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -277,7 +294,10 @@ exports.getPlantFromDBpedia = async (req, res) => {
   try {
     const userPlantInput = req.query.plant || '';
     const query = plantQUERY(userPlantInput);
-    const bindData = await fetcher.fetchBindings('https://dbpedia.org/sparql', query);
+    const bindData = await fetcher.fetchBindings(
+      'https://dbpedia.org/sparql',
+      query
+    );
 
     const results = [];
     bindData.on('data', binding => {

@@ -1,11 +1,3 @@
-// import { io } from '.node_modules/socket.io/client-dist/socket.io.js';
-
-importScripts('socket.io/client-dist/socket.io.js');
-
-const socket = io('http://localhost:3000/', {
-  path: '/plant-info/*',
-});
-
 const addResourcesToCache = async resources => {
   const cache = await caches.open('v1');
   await cache.addAll(resources);
@@ -140,7 +132,11 @@ const syncPosts = function () {
         const form_data = new FormData();
 
         for (const key in post) {
-          form_data.append(key, post[key]);
+          if (key === 'comments') {
+            form_data.append(key, JSON.stringify(post[key]));
+          } else {
+            form_data.append(key, post[key]);
+          }
         }
         addToDb(form_data);
       });
@@ -151,7 +147,13 @@ const syncPosts = function () {
 };
 
 self.addEventListener('install', event => {
-  event.waitUntil(addResourcesToCache(['/']));
+  event.waitUntil(
+    addResourcesToCache([
+      '/',
+      '/offline-plant-info/999',
+      '/javascripts/offlinePlantInfo.js',
+    ])
+  );
 });
 
 self.addEventListener('fetch', event => {

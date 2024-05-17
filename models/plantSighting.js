@@ -29,14 +29,11 @@ const plantSightingSchema = new Schema({
     },
   },
   comments: [
-    new Schema(
-      {
-        message: { type: String, required: true },
-        date: { type: Date, default: Date.now },
-        userNickname: { type: String, required: true },
-      },
-      { _id: false }
-    ),
+    {
+      message: { type: String, required: true },
+      date: { type: Date, default: Date.now },
+      userNickname: { type: String, required: true },
+    },
   ],
 });
 
