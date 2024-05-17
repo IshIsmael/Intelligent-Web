@@ -8,10 +8,12 @@ const comments = document.querySelector('.comments');
 
 let dbentry;
 
+
 window.addEventListener('online', () => {
   window.location.href = '/forum';
 });
 
+// open sightings indexedDB and retrieve all plant sightings
 sightingIndexedDB.onsuccess = event => {
   const db = event.target.result;
 
@@ -34,6 +36,7 @@ sightingIndexedDB.onsuccess = event => {
   };
 };
 
+//displays the offline created plants on the forum page
 function displayInfo(information) {
   for (const [key, value] of Object.entries(information)) {
     const element = document.getElementById(`${key}`);
@@ -67,6 +70,8 @@ function displayInfo(information) {
   information.comments.forEach(obj => insertHTMLMessage(obj));
 }
 
+// add messages to an offline post that
+// has not been submitted to mongoDB yet
 form.addEventListener('submit', e => {
   e.preventDefault();
   e.stopImmediatePropagation();
@@ -93,6 +98,7 @@ form.addEventListener('submit', e => {
   input.value = '';
 });
 
+// submit message to a plant-info page
 const insertHTMLMessage = function (messageObj) {
   const { message, userNickname, date } = messageObj;
 

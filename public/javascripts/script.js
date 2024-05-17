@@ -1,3 +1,4 @@
+// preview a plant image on forum page
 function previewImage(event) {
     var reader = new FileReader();
     reader.onload = function() {

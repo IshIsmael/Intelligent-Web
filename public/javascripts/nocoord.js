@@ -1,4 +1,5 @@
 // public/javascripts/nocoord.js
+// prevents the sighting creation for from being submitted unless a location on the map has been picked
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('plantSightingForm');
   const mapError = document.getElementById('noCoord');

@@ -1,7 +1,10 @@
+//load the DOM content for the dbPedia
 document.addEventListener('DOMContentLoaded', () => {
     const plantSearchInput = document.getElementById('plantSearch');
     const searchResults = document.getElementById('searchResults');
-  
+
+    //give plantSearchInput an event listener of type input
+    //  generates search results from auto complete of dbPedia
     plantSearchInput.addEventListener('input', async () => {
       const query = plantSearchInput.value.trim();
   
@@ -17,7 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
         searchResults.innerHTML = '';
       }
     });
-  
+
+    //Displays the search results obtained above
     const displaytheResults = (results) => {
       searchResults.innerHTML = '';
       results.forEach(result => {

@@ -1,7 +1,7 @@
 // public/javascripts/map.js
 // Map is centered on Sheffield
 const map = L.map('map').setView([53.3814, -1.4884], 13);
-
+//Create map
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution:
     'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
@@ -10,6 +10,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 let marker;
 
+//display the map marker where it was clicked
 function updateMarker(latitude, longitude) {
   if (marker) {
     map.removeLayer(marker);
@@ -18,6 +19,7 @@ function updateMarker(latitude, longitude) {
   marker = L.marker([latitude, longitude]).addTo(map);
 }
 
+// return coordinate values from click on the map of create page
 map.on('click', function (e) {
   const latitude = e.latlng.lat;
   const longitude = e.latlng.lng;
@@ -26,6 +28,7 @@ map.on('click', function (e) {
   updateMarker(latitude, longitude);
 });
 
+// Return coordinate values using geolocation
 const getLocationBtn = document.getElementById('getLocationBtn');
 getLocationBtn.addEventListener('click', function () {
   if (navigator.geolocation) {

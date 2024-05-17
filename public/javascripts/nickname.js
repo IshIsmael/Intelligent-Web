@@ -9,7 +9,8 @@ if (window.location.href.includes('create')) {
     .addEventListener('click', fillUserNicknameBox);
 }
 
-
+//Checks if a nickname has already been entered
+// if not then asks user to create nickname
 const handleSuccess = event => {
   checkIfEmpty(); //This checks if there is a nickname
   //The code below checks whether the current page is the plant-info page and then compares the current nickname to

@@ -42,12 +42,14 @@ messagesDB.onerror = event => {
   console.log(event.target.errorCode);
 };
 
+// create message indexedDB
 messagesDB.onupgradeneeded = event => {
   const db = event.target.result;
 
   const objectStore = db.createObjectStore('messages', { keyPath: 'id' });
 };
 
+// submit a message
 form.addEventListener('submit', e => {
   e.preventDefault();
   e.stopImmediatePropagation();
@@ -84,6 +86,7 @@ form.addEventListener('submit', e => {
   };
 });
 
+// sync messages saved in indexedDB once connected to the internet
 async function syncMessagesLater() {
   const registration = await navigator.serviceWorker.ready;
   try {
@@ -93,6 +96,7 @@ async function syncMessagesLater() {
   }
 }
 
+// post message onto the plant-info page
 const insertHTMLMessage = function (messageObj) {
   const { message, userNickname, date } = messageObj;
 
@@ -109,6 +113,7 @@ const insertHTMLMessage = function (messageObj) {
   messageBox.scrollTo(0, messageBox.scrollHeight);
 };
 
+// send message across socket.io
 socket.on('message', arg => {
   if (
     !(

@@ -1,3 +1,5 @@
+
+//registering the service worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
     .register('/sw.js', { scope: '/' })
@@ -11,6 +13,7 @@ if ('serviceWorker' in navigator) {
 
 const firstSection = document.querySelector('.plants-section');
 
+//sort plants based on location
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(async pos => {
     const url = `/closest-plants/${[
@@ -35,6 +38,11 @@ if (navigator.geolocation) {
   });
 }
 
+
+
+
+// loop through a list of plants and return the correct html
+// to display them all in their own divs on the same page
 const displayClosestPlantsHTML = function (plants) {
   let html = '';
 

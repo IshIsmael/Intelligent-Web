@@ -21,6 +21,7 @@ document.getElementById('hasFruitsOrSeedsFilter').checked =
   currentFilters.hasFruitsOrSeeds;
 statusFilter.value = currentFilters.confirmation;
 
+//implements the filters
 sortSelect.addEventListener('change', function () {
   const selectedSort = this.value;
   const filters = getSelectedFilters();
@@ -28,6 +29,7 @@ sortSelect.addEventListener('change', function () {
   window.location.href = url;
 });
 
+//button to apply the filter created by sortSelect
 applyFiltersBtn.addEventListener('click', function () {
   const selectedSort = sortSelect.value;
   const filters = getSelectedFilters();
@@ -35,6 +37,7 @@ applyFiltersBtn.addEventListener('click', function () {
   window.location.href = url;
 });
 
+//implement filter for verification
 statusFilter.addEventListener('change', function () {
   const selectedSort = sortSelect.value;
   const filters = getSelectedFilters();
@@ -42,6 +45,7 @@ statusFilter.addEventListener('change', function () {
   window.location.href = url;
 });
 
+//creates check boxes for filters
 function getSelectedFilters() {
   const hasFlowersFilter = document.getElementById('hasFlowersFilter').checked;
   const hasLeavesFilter = document.getElementById('hasLeavesFilter').checked;
@@ -71,6 +75,8 @@ const sightingIndexedDB = window.indexedDB.open('sightings');
 
 const entries = document.querySelector('.entries');
 
+//for each created plant sighting.
+// Create a div to be placed on the forum page
 const insertHTML = function (plants) {
   let html = '';
 
@@ -98,6 +104,9 @@ const insertHTML = function (plants) {
   return html;
 };
 
+// On successful loading of the sighting indexedDB
+// return a list of all plant sightings and pass
+// them to the function insertHTML
 sightingIndexedDB.onsuccess = event => {
   const db = event.target.result;
 
