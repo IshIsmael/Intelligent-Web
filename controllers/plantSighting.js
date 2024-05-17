@@ -3,6 +3,9 @@ const PlantSighting = require('../models/plantSighting');
 const { SparqlEndpointFetcher } = require('fetch-sparql-endpoint');
 const fetcher = new SparqlEndpointFetcher();
 
+
+//This creates a plant Sighting object and adds it to the mongoDB
+//Afterwards, it redirects the user to the forum page or produces a console error
 exports.createSighting = async (req, res) => {
   try {
     console.log(req.body);
@@ -85,6 +88,11 @@ exports.createSighting = async (req, res) => {
   }
 };
 
+
+//This retrieves all the filters and sorting options on the forum page
+//It then applies the relevant filter queries and sort methods to the PlantSighting List
+//Then returns the new sorted filtered list of PlantSightings
+//Consoles an error if it occurs
 exports.listPlants = async (req, res) => {
   let query = {};
   let sortOption = {};
@@ -123,6 +131,10 @@ exports.listPlants = async (req, res) => {
   }
 };
 
+//This collects the id of the PlantSighting selected
+//finds out whether that PlantSighting has been verified with a dbpediaInfo
+//returns the entirety of the data found on that PlantSighting and renders it into the plant-info page
+//Consoles an error if it occurs
 exports.getPlantInfo = async (req, res) => {
   try {
     const plantId = req.params.id;
@@ -148,6 +160,9 @@ exports.getPlantInfo = async (req, res) => {
   }
 };
 
+//This retrieves the plantID of the PlantSighting on the current plant-info page
+//Then it renders the edit-plant page with the relevant plantID
+//Consoles an error if it occurs
 exports.getEditPlantForm = async (req, res) => {
   try {
     const plantId = req.params.id;
@@ -164,6 +179,10 @@ exports.getEditPlantForm = async (req, res) => {
   }
 };
 
+//This retrieves the plantID of the current plant and the entered confirmed plantInfo from edit-plant page
+//It then edits the confirmation status of that PlantSighting and updates the object to contain that new confirmed data
+//Renders the updatedPlant Sighting plant-info page upon successful update
+//Consoles an error if it occurs
 exports.updatePlantSighting = async (req, res) => {
   try {
     const plantId = req.params.id;
@@ -195,6 +214,8 @@ exports.updatePlantSighting = async (req, res) => {
   }
 };
 
+//This tries to add  new message data to the current PlantSighting object in MongoDB when online
+//Console logs the success or failure of it
 exports.newMessage = async (req, res) => {
   try {
     const { id, ...messageObj } = req.body;
@@ -210,6 +231,9 @@ exports.newMessage = async (req, res) => {
   }
 };
 
+//This retrieves a list of PlantSightings sorted in the most recently seen to most distantly seen
+//This is rendered on the Home Page
+//Console logs an error if it occurs
 exports.homePagePlants = async (req, res, next) => {
   try {
     const plants = await PlantSighting.find().sort({ dateSeen: -1 }).limit(3);
@@ -222,6 +246,9 @@ exports.homePagePlants = async (req, res, next) => {
   }
 };
 
+//This Collects the coordinates of the current user and calculates the closest PlantSightings to them
+//This is displayed Home Page
+//Console logs the error if it occurs
 exports.closestPlants = async (req, res) => {
   try {
     const coordinates = req.params.location.split(',').map(value => +value);
@@ -241,6 +268,8 @@ exports.closestPlants = async (req, res) => {
   }
 };
 
+//This fetches the DBpedia info and returns the first result or an empty dictionary
+// It console logs the error when it occurs and returns an empty dictionary when that occurs
 async function fetchDBpediaInfo(commonName) {
   try {
     const response = await fetch(
@@ -261,6 +290,8 @@ async function fetchDBpediaInfo(commonName) {
   }
 }
 
+//This applies the plant query DBpedia
+//Returns the top 15 results
 const plantQUERY = userPlantInput => {
   return `
     PREFIX dbo: <http://dbpedia.org/ontology/>
@@ -291,6 +322,10 @@ const plantQUERY = userPlantInput => {
   `;
 };
 
+//This retrieves the user's plant suggestion and queries DBpedia with it.
+//It collects the results from the query with a sparql endpoint.
+//Afterwards, it binds the uri, label and abstract data collected from that data together and pushes them to an array
+//Responds to the request with the array or sends a 500 error and a console log
 exports.getPlantFromDBpedia = async (req, res) => {
   try {
     const userPlantInput = req.query.plant || '';
