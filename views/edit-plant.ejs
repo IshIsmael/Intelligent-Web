@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/stylesheets/style.css" />
     <link rel="stylesheet" href="/stylesheets/form.css" />
     <script defer src="/javascripts/autocap.js"></script>
-    <script defer src="/javascripts/dbpedia.js"></script>
+    <script defer src="/javascripts/dbpediaSearch.js"></script>
   </head>
   <%- include('./partials/header.ejs'); -%>
   <body>
@@ -18,42 +18,38 @@
       >
         <h1>Edit Plant Sighting</h1>
 
+        <label for="knowsPlantName">Select this if you know the plant</label>
+        <input 
+        type="checkbox" 
+        id="knowsPlantName" 
+        name="knowsPlantName" 
+        onchange="toggleDBpediaSearch()" 
+        />
+
+        <div id="dbpediaSearchContainer" style="display: none;">
+          <label for="plantSearch">Search for a Plant from DBpedia:</label>
+          <p class="search-info">
+            The search will give you suggestions as you type. Click on a suggestion to auto-fill the form with the plant's details.
+            Please only try this if online.
+          </p>
+          <input
+            placeholder="Search Plant"
+            type="text"
+            id="plantSearch"
+            name="plantSearch"
+            disabled
+          />
+          <ul id="searchResults" class="dropdown"></ul>
+        </div>
+
         <label for="commonName">Common Name:</label>
         <input
           type="text"
           id="commonName"
           name="commonName"
           value="<%= plant.identification.commonName %>"
-          oninput="autocap(this); getDBPediaInfo(this.value);"
+          oninput="autocap(this);"
           required
-        />
-        <div id="dbpediaInfo"></div>
-
-        <label for="scientificName">Scientific Name:</label>
-        <input
-          type="text"
-          id="scientificName"
-          name="scientificName"
-          value="<%= plant.identification.scientificName %>"
-          oninput="autocap(this)"
-          required
-        />
-
-        <label for="description">Description:</label>
-        <input
-          type="text"
-          id="description"
-          name="description"
-          value="<%= plant.identification.description %>"
-          required
-        />
-
-        <label for="dbPediaUri">DBPedia URI:</label>
-        <input
-          type="text"
-          id="dbPediaUri"
-          name="dbPediaUri"
-          value="<%= plant.identification.dbPediaUri %>"
         />
 
         <input type="submit" value="Update Sighting" />

@@ -6,9 +6,7 @@ const plantSightingSchema = new Schema({
   dateSeen: { type: Date, required: true },
   identification: {
     commonName: { type: String },
-    scientificName: { type: String },
     description: { type: String, required: true },
-    dbPediaUri: { type: String },
     photo: { type: String },
     confirmation: { type: String, enum: ['Verified', 'Pending Confirmation'] },
   },

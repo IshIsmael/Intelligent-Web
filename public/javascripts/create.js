@@ -26,7 +26,7 @@ async function syncPostLater() {
   }
 }
 
-syncPostLater();
+//syncPostLater();
 
 const submitForm = function (e) {
   e.preventDefault();

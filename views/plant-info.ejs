@@ -39,20 +39,38 @@
             <p class="details-divider">Main Info</p>
 
             <p class="details-table">
-              <span class="details-label">Scientific Name</span>
+              <span class="details-label">Plant Name</span>
               <span class="details-value">
-                <%=plant.identification.scientificName %>
+                <%= dbpediaInfo.label || 'Not Confirmed Yet' %>
               </span>
             </p>
 
             <p class="details-table">
               <span class="details-label">Description</span>
               <span class="details-value">
-                <%= plant.identification.description%>
+                <%= dbpediaInfo.abstract || 'Not Confirmed Yet' %>
+              </span>
+            </p>
+
+            <p class="details-table">
+              <span class="details-label">DBpedia URI</span>
+              <span class="details-value">
+                <% if (dbpediaInfo.uri) { %>
+                  <a href="<%= dbpediaInfo.uri %>" target="_blank"><%= dbpediaInfo.uri %></a>
+                <% } else { %>
+                  N/A
+                <% } %>
               </span>
             </p>
 
             <p class="details-divider">Characteristics</p>
+
+            <p class="details-table">
+              <span class="details-label">User Description</span>
+              <span class="details-value">
+                <%= plant.identification.description %>
+              </span>
+            </p>
 
             <p class="details-table">
               <span class="details-label">Sun Exposure</span>

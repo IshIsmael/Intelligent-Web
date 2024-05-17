@@ -122,3 +122,9 @@ select {
     text-align: center;
   }
 }
+
+#searchResults li::before {
+  content: "🪴";
+  margin-right: 8px;
+  font-size: 18px;
+}

@@ -23,6 +23,7 @@
     <script defer src="/javascripts/nocoord.js"></script>
     <script defer src="/javascripts/nickname.js"></script>
     <script defer src="/javascripts/create.js"></script>
+    <script defer src="/javascripts/dbpediaSearch.js"></script>
   </head>
   <%- include('./partials/header.ejs'); -%>
   <body>
@@ -90,6 +91,31 @@
           required
         />
 
+        <label for="knowsPlantName">Select this if you know the plant</label>
+        <input 
+        type="checkbox" 
+        id="knowsPlantName" 
+        name="knowsPlantName" 
+        onchange="toggleDBpediaSearch()" 
+        />
+
+        <div id="dbpediaSearchContainer" style="display: none;">
+          <label for="plantSearch">Search for a Plant from DBpedia:</label>
+          <p class="search-info">
+            The search will give you suggestions as you type. Click on a suggestion to auto-fill the form with the plant's details.
+            Please only try this if online.
+          </p>
+          <input
+            placeholder="Search Plant"
+            type="text"
+            id="plantSearch"
+            name="plantSearch"
+            disabled
+          />
+          <ul id="searchResults" class="dropdown"></ul>
+        </div>
+
+
         <label for="commonName">Common Name:</label>
         <input
           placeholder="Common Name"
@@ -98,23 +124,14 @@
           name="commonName"
           required
         />
-        <div id="dbpediaInfo"></div>
 
-        <label for="scientificName">Scientific Name:</label>
-        <input
-          placeholder="Scientific Name"
-          type="text"
-          id="scientificName"
-          name="scientificName"
-          required
-        />
-
-        <label for="description">Description:</label>
+        <label for="description">User Description:</label>
         <input
           placeholder="Description"
           type="text"
           id="description"
           name="description"
+          aria-placeholder="Add a short description of the plant (max 150 characters)"
           required
         />
 
@@ -196,14 +213,6 @@
             />
           </div>
         </div>
-
-        <label for="dbPediaUri">DBPedia URI:</label>
-        <input
-          placeholder="DBPedia URI"
-          type="text"
-          id="dbPediaUri"
-          name="dbPediaUri"
-        />
 
         <button type="submit">Add Sighting</button>
       </form>

@@ -76,4 +76,7 @@ router.put('/newMessage', plantSightingController.newMessage);
 // Front page
 router.get('/closest-plants/:location', plantSightingController.closestPlants);
 
+// Fetch plant data from DBpedia
+router.get('/dbpedia-plants', plantSightingController.getPlantFromDBpedia);
+
 module.exports = router;

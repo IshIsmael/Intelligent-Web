@@ -1,5 +1,7 @@
 // controllers/plantSighting.js
 const PlantSighting = require('../models/plantSighting');
+const { SparqlEndpointFetcher } = require('fetch-sparql-endpoint');
+const fetcher = new SparqlEndpointFetcher();
 
 exports.createSighting = async (req, res) => {
   try {
@@ -8,9 +10,7 @@ exports.createSighting = async (req, res) => {
     const {
       dateSeen,
       commonName,
-      scientificName,
       description,
-      dbPediaUri,
       userNickname,
       sunExposure,
       flowerColor,
@@ -22,11 +22,12 @@ exports.createSighting = async (req, res) => {
 
     // Sets the default status to Pending Confirmation
     let confirmation = 'Pending Confirmation';
-
-    // If a DBPedia URI is provided it is autmoatically verified
-    if (dbPediaUri) {
+    const knowsPlantName = req.body.knowsPlantName === 'on';
+    if (knowsPlantName && commonName) {
       confirmation = 'Verified';
+      const dbpediaInfo = await fetchDBpediaInfo(commonName);
     }
+
     // default for no image uploaded, else image uploaded name added to image path
     //fixes issue with image not being retrieved from the databse
     let imagePath = 'images/Logo.png';
@@ -51,9 +52,7 @@ exports.createSighting = async (req, res) => {
       },
       identification: {
         commonName,
-        scientificName,
         description,
-        dbPediaUri,
         photo: imagePath,
         confirmation,
       },
@@ -123,13 +122,20 @@ exports.getPlantInfo = async (req, res) => {
     if (!plant) {
       return res.status(404).send('Plant not found');
     }
-    res.render('plant-info', { title: 'Plant Information', plant });
+
+    let dbpediaInfo = {};
+    if (plant.identification.confirmation === 'Verified') {
+      const commonName = plant.identification.commonName;
+      dbpediaInfo = await fetchDBpediaInfo(commonName);
+    }
+
+    res.render('plant-info', { title: 'Plant Information', plant, dbpediaInfo });
   } catch (error) {
     console.error('Failed to fetch plant:', error);
     res.status(500).send('Error fetching plant from the database');
   }
 };
-// controllers/plantSighting.js
+
 exports.getEditPlantForm = async (req, res) => {
   try {
     const plantId = req.params.id;
@@ -149,11 +155,11 @@ exports.getEditPlantForm = async (req, res) => {
 exports.updatePlantSighting = async (req, res) => {
   try {
     const plantId = req.params.id;
-    const { commonName, scientificName, description, dbPediaUri } = req.body;
+    const { commonName, knowsPlantName } = req.body;
 
     // Set the new confirmation status based on the presence of a DBPedia URI
-    let confirmation = 'Pending Verification';
-    if (dbPediaUri) {
+    let confirmation = 'Pending Confirmation';
+    if (knowsPlantName === 'on' && commonName) {
       confirmation = 'Verified';
     }
     // Update the plant sighting with the new information
@@ -161,9 +167,6 @@ exports.updatePlantSighting = async (req, res) => {
       plantId,
       {
         'identification.commonName': commonName,
-        'identification.scientificName': scientificName,
-        'identification.description': description,
-        'identification.dbPediaUri': dbPediaUri,
         'identification.confirmation': confirmation,
       },
       { new: true }
@@ -222,5 +225,83 @@ exports.closestPlants = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).send('An error occured');
+  }
+};
+
+async function fetchDBpediaInfo(commonName) {
+  try {
+    const response = await fetch(`http://localhost:3000/dbpedia-plants?plant=${encodeURIComponent(commonName)}`, {
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    const results = await response.json();
+    return results[0] || {};
+  } catch (error) {
+    console.error('Error fetching DBpedia info:', error);
+    return {};
+  }
+}
+
+const plantQUERY = (userPlantInput) => {
+  return `
+    PREFIX dbo: <http://dbpedia.org/ontology/>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX dbr: <http://dbpedia.org/resource/>
+    SELECT ?uri ?label ?abstract
+    WHERE {
+      {
+        BIND(IRI(CONCAT("http://dbpedia.org/resource/", "${userPlantInput}")) AS ?uri)
+        ?uri rdfs:label ?label ;
+             rdfs:comment ?abstract .
+        
+        FILTER(langMatches(lang(?label), "EN"))
+        FILTER(langMatches(lang(?abstract), "EN"))
+      }
+      UNION
+      {
+        ?uri a dbo:Plant ;
+             rdfs:label ?label ;
+             rdfs:comment ?abstract .
+        FILTER(REGEX(?label, "${userPlantInput}", "i"))
+        FILTER(langMatches(lang(?label), "EN"))
+        FILTER(langMatches(lang(?abstract), "EN"))
+        FILTER(?uri != IRI(CONCAT("http://dbpedia.org/resource/", "${userPlantInput}")))
+      }
+    }
+    LIMIT 15
+  `;
+};
+
+exports.getPlantFromDBpedia = async (req, res) => {
+  try {
+    const userPlantInput = req.query.plant || '';
+    const query = plantQUERY(userPlantInput);
+    const bindData = await fetcher.fetchBindings('https://dbpedia.org/sparql', query);
+
+    const results = [];
+    bindData.on('data', binding => {
+      results.push({
+        uri: binding.uri.value,
+        label: binding.label.value,
+        abstract: binding.abstract.value,
+      });
+    });
+
+    bindData.on('end', () => {
+      res.json(results);
+    });
+
+    bindData.on('error', error => {
+      console.error('Failed to fetch plant data from DBpedia:', error);
+      if (!res.headersSent) {
+        res.status(500).send('Error fetching plant data from DBpedia');
+      }
+    });
+  } catch (error) {
+    console.error('Failed to fetch plant data from DBpedia:', error);
+    if (!res.headersSent) {
+      res.status(500).send('Error fetching plant data from DBpedia');
+    }
   }
 };
