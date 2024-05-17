@@ -9,13 +9,15 @@ if (window.location.href.includes('create')) {
     .addEventListener('click', fillUserNicknameBox);
 }
 
-const handleSuccess = event => {
-  // console.log('Opened..'); // USED FOR TESTING
-  checkIfEmpty(); //This checks if there is a nickname
 
-  //The Listeners:
-  // submit_userName is for the nickname login page
-  // fillUserNickname is for the create post page
+const handleSuccess = event => {
+  checkIfEmpty(); //This checks if there is a nickname
+  //The code below checks whether the current page is the plant-info page and then compares the current nickname to
+  // the content creator's nickname
+  if (window.location.href.includes('plant-info')) {
+    const contentCreator = document.getElementById('CreatorNickname').getAttribute('value')
+    compareUserToNickname(contentCreator)
+  }
 };
 
 //This is what is needed to initialise the indexedDB objects in the database
@@ -70,6 +72,28 @@ function getNickname() {
     };
   });
 }
+//The function below is used to hide and show the edit button on the plant-info page depending on whether the user's
+//Nickname matches the plant's userNickname that created the post
+function compareUserToNickname(PNickname) {
+  try {
+    let id = 1; //location of where the object containing the nickname is stored
+    const db = userIndexedDB.result;
+    const action = db.transaction('users', 'readonly');
+    const store = action.objectStore('users');
+    let value = store.get(id); //This is the object of where it is stored
+    value.onsuccess = function (event) {
+      var result = event.target.result.nickname
+      if (result === PNickname) {
+        document.getElementById('editButton').classList.remove('hidden') //reveals the edit button
+      }
+    }
+    value.onerror = function (event) {
+      console.log("ERROR")
+    };
+  }catch(e){
+    console.log("ERROR:" + e)
+  }
+}
 
 //This is the function used to show or hide content based on whether there is a user nickname
 function checkIfEmpty() {
@@ -98,9 +122,12 @@ function fillUserNicknameBox() {
       document.getElementById('userNickname').value = 'Enter A New Nickname';
     });
 }
+//This handles the errors
 const handleError = () => {
   console.error(`Database Error:`);
 };
+
+//These are event listeners that activate when certain events occur
 const userIndexedDB = window.indexedDB.open('userdatabase');
 userIndexedDB.addEventListener('upgradeneeded', handleUpgrade);
 userIndexedDB.addEventListener('success', handleSuccess);

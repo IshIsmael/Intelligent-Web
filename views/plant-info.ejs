@@ -31,7 +31,9 @@
           <div style="width: 60px"></div>
           <%= plant.identification.commonName %> <% if
           (plant.identification.confirmation === 'Pending Confirmation') { %>
-          <button id="editButton">Edit</button>
+            <div id="CreatorNickname" value="<%= plant.userNickname%>">
+              <button id="editButton" class="hidden">Edit</button>
+            </div>
           <% } %>
         </h1>
         <div class="both-columns">
