@@ -1,15 +1,19 @@
+// Adds resources to cache at install
 const addResourcesToCache = async resources => {
   const cache = await caches.open('v1');
   await cache.addAll(resources);
 };
 
-const putInCache = async (request, response) => {
+// Adds request and respones to cache dynamically
+const addToCache = async (request, response) => {
   const cache = await caches.open('v1');
   await cache.put(request, response);
 };
 
+// Responds to all requests, it takes a network first approach so cache is used as a backup when the network is not available
 const networkFirst = async request => {
   try {
+    // Offline page uses ID to load info from IndexedDB this serves the template page when any ID in entered
     if (request.url.includes('offline-plant-info')) {
       const responseFromCache = await caches.match('/offline-plant-info/999');
 
@@ -18,6 +22,7 @@ const networkFirst = async request => {
 
     const responseFromNetwork = await fetch(request);
 
+    // Some things should not be cached so there is a check for those
     if (
       !(
         request.method === 'POST' ||
@@ -26,7 +31,7 @@ const networkFirst = async request => {
         request.url.includes('offline-plant-info')
       )
     ) {
-      putInCache(request, responseFromNetwork.clone());
+      addToCache(request, responseFromNetwork.clone());
     }
 
     return responseFromNetwork;
@@ -36,6 +41,7 @@ const networkFirst = async request => {
   }
 };
 
+// Uploads messages to MongoDB from an existing post
 const insertMongoMessage = async function (messageObj) {
   try {
     const url = '/newMessage';
@@ -53,6 +59,7 @@ const insertMongoMessage = async function (messageObj) {
   }
 };
 
+// Syncs messages from IndexedDB to MongoDB when connection is restored
 const syncMessages = function () {
   const messagesDB = indexedDB.open('messages');
 
@@ -85,6 +92,7 @@ const syncMessages = function () {
   };
 };
 
+// Add a post to MongoDB
 async function addToDb(obj) {
   try {
     const url = '/submit-plant-sighting';
@@ -99,6 +107,7 @@ async function addToDb(obj) {
   }
 }
 
+// Sync posts from IndexedDB to MongoDB when connection is restored
 const syncPosts = function () {
   const sightingDB = indexedDB.open('sightings');
 
@@ -127,6 +136,7 @@ const syncPosts = function () {
       results.result.forEach(post => {
         const form_data = new FormData();
 
+        // Transforms IndexedDB object into FormData
         for (const key in post) {
           if (key === 'comments') {
             form_data.append(key, JSON.stringify(post[key]));
@@ -142,6 +152,7 @@ const syncPosts = function () {
   };
 };
 
+// Installation Listener
 self.addEventListener('install', event => {
   event.waitUntil(
     addResourcesToCache([
@@ -152,10 +163,12 @@ self.addEventListener('install', event => {
   );
 });
 
+// Fetch Listener
 self.addEventListener('fetch', event => {
   event.respondWith(networkFirst(event.request));
 });
 
+// Sync Listener
 self.addEventListener('sync', event => {
   if (event.tag === 'sync-messages') {
     event.waitUntil(syncMessages());

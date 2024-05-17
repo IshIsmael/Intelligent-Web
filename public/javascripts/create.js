@@ -8,7 +8,12 @@ async function syncPostLater() {
   const registration = await navigator.serviceWorker.ready;
   try {
     await registration.sync.register('sync-posts');
-    window.location.href = '/forum';
+    const thisContent = document.querySelector('.checkNickname');
+    thisContent.classList.add('hidden');
+    thisContent.insertAdjacentHTML(
+      'afterend',
+      `<section class="content"> <h1> Event Created! </h1> </section>`
+    );
   } catch {
     console.log('Background Sync could not be registered!');
   }
