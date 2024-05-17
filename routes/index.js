@@ -28,6 +28,10 @@ router.get('/create', function (req, res, next) {
 /* GET individual plant information page. */
 router.get('/plant-info/:id', plantSightingController.getPlantInfo);
 
+router.get('/offline-plant-info/:id', (req, res) => {
+  res.render('offline-plant-info', { title: 'Plant Information' });
+});
+
 router.get('/offline_plant_info/:plant', offlinePlantController.getPlantInfo);
 // Multer
 // Set up multer for file uploads

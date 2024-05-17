@@ -136,6 +136,10 @@ const insertMongoMessage = async function (messageObj) {
   }
 };
 
+socket.on('message', arg => {
+  insertHTMLMessage(arg);
+});
+
 //////////// Edit Button
 if (editButton) {
   editButton.addEventListener('click', () => {

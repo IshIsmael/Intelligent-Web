@@ -18,13 +18,20 @@ const putInCache = async (request, response) => {
 
 const networkFirst = async request => {
   try {
+    if (request.url.includes('offline-plant-info')) {
+      const responseFromCache = await caches.match('/offline-plant-info/999');
+
+      return responseFromCache;
+    }
+
     const responseFromNetwork = await fetch(request);
 
     if (
       !(
         request.method === 'POST' ||
         request.method === 'PUT' ||
-        request.url.includes('transport')
+        request.url.includes('transport') ||
+        request.url.includes('offline-plant-info')
       )
     ) {
       putInCache(request, responseFromNetwork.clone());
@@ -135,10 +142,10 @@ const syncPosts = function () {
         for (const key in post) {
           form_data.append(key, post[key]);
         }
-        // addToDb(form_data);
+        addToDb(form_data);
       });
 
-      // objectStore.clear();
+      objectStore.clear();
     };
   };
 };

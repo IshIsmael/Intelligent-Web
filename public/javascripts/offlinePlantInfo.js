@@ -1,32 +1,113 @@
+const sightingIndexedDB = window.indexedDB.open('sightings');
+const form = document.querySelector('.comments-form');
+const input = document.querySelector('.commentsInput');
+const messageBox = document.querySelector('.messageBox');
+const switcher = document.querySelector('.chat-switch');
+const image = document.querySelector('.image');
+const comments = document.querySelector('.comments');
 
-const urlParams = new URLSearchParams(window.location.search);
-const currentParams = urlParams.get('Plant')
-const Plant = decodeURIComponent(currentParams)
-const handleSuccess4 = (event) => {
-    console.log("Opened..")// USED FOR TESTING
-    window.addEventListener('offline',isOffline)
+let dbentry;
+
+sightingIndexedDB.onsuccess = event => {
+  const db = event.target.result;
+
+  const objectStore = db
+    .transaction('sightings', 'readwrite')
+    .objectStore('sightings');
+
+  const request = objectStore.getAll();
+
+  request.onsuccess = () => {
+    dbentry = request.result.filter(
+      obj => obj.id === +window.location.href.split('/').pop()
+    )[0];
+
+    if (!dbentry.comments) {
+      dbentry.comments = [];
+    }
+
+    displayInfo(dbentry);
+  };
+};
+
+function displayInfo(information) {
+  for (const [key, value] of Object.entries(information)) {
+    const element = document.getElementById(`${key}`);
+
+    if (element) {
+      console.log(element);
+      if (element.classList.contains('details-label')) {
+        element.insertAdjacentText('afterend', value);
+      } else {
+        element.innerText = value;
+      }
+    }
+
+    console.log(`${key}: ${value}`);
+  }
+
+  const coordinates = [information.latitude, information.longitude];
+
+  const map = L.map('map').setView(coordinates, 13);
+
+  // Adding Tiles
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:
+      'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+    maxZoom: 18,
+  }).addTo(map);
+
+  // Marker
+  L.marker(coordinates).addTo(map);
+
+  information.comments.forEach(obj => insertHTMLMessage(obj));
 }
 
-const handleUpgrade4 = (ev) => {
-    const db = ev.target.result
-    let store = db.createObjectStore('plants', {keyPath: "id",autoIncrement : true}) //Creates the object key
-    store.createIndex("commonName","identification.commonName", {unique:false})
-    store.createIndex("dateSeen","dateSeen", {unique: false})
-    store.createIndex("plantID","_id", {unique: true} )
-    console.log("Upgraded object store...") // USED FOR TESTING
-}
-const handleError4=() => {
-    console.error(`Database Error:`)
-}
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  e.stopImmediatePropagation();
 
-function isOffline(){
-    const db = plantsIndexedDB.result
-    const action = db.transaction('plants', 'readwrite') //states what action is going to happen to what objects
-    const store = action.objectStore('plants')
-    const plant = document.getElementById("SelectedPlant").value
-    document.getElementById('populateWithCommonName').innerText = plant.identification.commonName
-}
-const plantsIndexedDB = window.indexedDB.open('plantsDatabase')
-plantsIndexedDB.addEventListener("upgradeneeded", handleUpgrade4)
-plantsIndexedDB.addEventListener("success", handleSuccess4)
-plantsIndexedDB.addEventListener("error", handleError4)
+  const messageObj = {
+    message: input.value,
+    date: new Date(),
+    userNickname,
+  };
+
+  if (input.value === '') return;
+
+  insertHTMLMessage(messageObj);
+  dbentry.comments.push(messageObj);
+
+  const db = sightingIndexedDB.result;
+
+  const objectStore = db
+    .transaction('sightings', 'readwrite')
+    .objectStore('sightings');
+
+  objectStore.put(dbentry);
+
+  input.value = '';
+});
+
+const insertHTMLMessage = function (messageObj) {
+  const { message, userNickname, date } = messageObj;
+
+  console.log(messageObj);
+
+  const currentTime = new Date(date).toLocaleDateString('en-uk', {
+    minute: 'numeric',
+    hour: 'numeric',
+    second: 'numeric',
+  });
+
+  const messageHTML = `<div class='message'> <div> <strong> ${userNickname}: </strong> ${message} </div> 
+    <div> ${currentTime} </div> </div> `;
+
+  messageBox.insertAdjacentHTML('beforeend', messageHTML);
+  messageBox.scrollTo(0, messageBox.scrollHeight);
+};
+
+switcher.addEventListener('click', () => {
+  image.classList.toggle('hidden');
+  comments.classList.toggle('hidden');
+});

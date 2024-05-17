@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plant Information</title>
+
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/plantInfo.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <script
+      defer
+      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    ></script>
+
+    <script defer src="/javascripts/offlinePlantInfo.js"></script>
+    <script defer src="/javascripts/nickname.js"></script>
+  </head>
+
+  <body>
+    <%- include('partials/header') %>
+    <main>
+      <section class="checkNickname content">
+        <h1 class="title">
+          <div style="width: 60px"></div>
+          <div id="commonName"></div>
+        </h1>
+        <div class="both-columns">
+          <div class="details">
+            <p class="details-divider">Main Info</p>
+
+            <p class="details-table">
+              <span class="details-label">Scientific Name</span>
+              <span class="details-value" id="scientificName"> </span>
+            </p>
+
+            <p class="details-table">
+              <span class="details-label">Description</span>
+              <span class="details-value" id="description"> </span>
+            </p>
+
+            <p class="details-divider">Characteristics</p>
+
+            <p class="details-table">
+              <span class="details-label" id="sunExposure">Sun Exposure</span>
+            </p>
+
+            <p class="details-table">
+              <span class="details-label" id="flowerColor">Flower Color</span>
+            </p>
+
+            <p class="details-table">
+              <span class="details-label" id="plantLength">Plant Length</span>
+            </p>
+
+            <p class="details-table">
+              <span class="details-label" id="plantHeight">Plant Height</span>
+            </p>
+
+            <p class="details-table">
+              <span class="details-label" id="plantSpread">Plant Spread</span>
+            </p>
+
+            <p class="details-table">
+              <span class="details-label" id="hasFlowers">Has Flowers</span>
+            </p>
+
+            <p class="details-table">
+              <span class="details-label" id="hasLeaves">Has Leaves</span>
+            </p>
+
+            <p class="details-table">
+              <span class="details-label" id="hasFruitsOrSeeds"
+                >Has Fruits or Seeds</span
+              >
+            </p>
+
+            <div id="map"></div>
+          </div>
+
+          <div class="image-chat">
+            <p class="details-divider chat-switch">
+              Click to Switch Between Chat and Image
+            </p>
+
+            <img
+              class="image hidden"
+              src="/images/Logo.png"
+              alt="Plant Image"
+            />
+
+            <div class="comments">
+              <div class="messageBox"></div>
+
+              <form class="comments-form">
+                <input class="commentsInput" type="text" />
+                <button type="submit" class="button">Send</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+      <%- include('./partials/enter_nickname.ejs'); -%>
+    </main>
+    <!-- Footer -->
+    <%- include('./partials/footer.ejs'); -%>
+  </body>
+</html>

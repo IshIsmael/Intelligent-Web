@@ -17,6 +17,7 @@ exports.createSighting = async (req, res) => {
       plantLength,
       plantHeight,
       plantSpread,
+      comments,
     } = req.body;
 
     // Sets the default status to Pending Confirmation
@@ -66,7 +67,7 @@ exports.createSighting = async (req, res) => {
         plantHeight: parseFloat(plantHeight),
         plantSpread: parseFloat(plantSpread),
       },
-      // Comments will be added later
+      comments,
     });
 
     await newSighting.save();

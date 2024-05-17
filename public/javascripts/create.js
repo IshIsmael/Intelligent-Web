@@ -26,6 +26,8 @@ async function syncPostLater() {
   }
 }
 
+syncPostLater();
+
 const submitForm = function (e) {
   e.preventDefault();
   e.stopImmediatePropagation();
@@ -37,8 +39,8 @@ const submitForm = function (e) {
   });
 
   if (navigator.onLine) {
-    // addToDb(newSighting);
-    // window.location.href = '/forum';
+    addToDb(newSighting);
+    window.location.href = '/forum';
   } else {
     const db = sightingIndexedDB.result;
 

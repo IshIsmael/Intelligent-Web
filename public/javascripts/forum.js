@@ -76,16 +76,15 @@ const insertHTML = function (plants) {
 
   plants.forEach(plant => {
     html += `
-    <div class="entry">
+    <div class="entry" onclick="window.location.href = 'offline-plant-info/${plant.id}'"
+    >
     <img
     src="images/Logo.png"
     class="card-img-top"
     alt="Plant Image"
-    onclick="window.location.href = 'plant-info/'"
     />
     <div
     class="entry-info"
-    onclick="window.location.href = 'plant-info/'"
     >
     <p class="entry-title">
         ${plant.commonName}
@@ -109,7 +108,6 @@ sightingIndexedDB.onsuccess = event => {
   const request = objectStore.getAll();
 
   request.onsuccess = () => {
-    // console.log(request.result);
     entries.insertAdjacentHTML('beforeend', insertHTML(request.result));
   };
 };
