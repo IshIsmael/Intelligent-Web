@@ -85,7 +85,7 @@ const insertHTML = function (plants) {
     <div class="entry" onclick="window.location.href = 'offline-plant-info/${plant.id}'"
     >
     <img
-    src="images/Logo.png"
+    src="/images/Logo.png"
     class="card-img-top"
     alt="Plant Image"
     />
