@@ -15,3 +15,5 @@ Whilst offline:
 
 Git Repository:
 https://github.com/IshIsmael/Intelligent-Web
+
+![image](https://github.com/IshIsmael/Intelligent-Web/assets/52096455/ec8284cd-aff2-429e-a7ee-3887767f0de8)
