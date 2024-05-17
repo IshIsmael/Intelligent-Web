@@ -3,21 +3,6 @@ const sightingIndexedDB = window.indexedDB.open('sightings');
 sightingIndexedDB.addEventListener('upgradeneeded', handleUpgradeOne);
 sightingIndexedDB.addEventListener('error', handleErrorOne);
 
-async function addToDb(obj) {
-  try {
-    const url = '/submit-plant-sighting';
-    const options = {
-      method: 'POST',
-      body: obj,
-    };
-
-    await fetch(url, options);
-    window.location.href = '/forum';
-  } catch (err) {
-    console.log(err);
-  }
-}
-
 async function syncPostLater() {
   const registration = await navigator.serviceWorker.ready;
   try {

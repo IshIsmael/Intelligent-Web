@@ -47,7 +47,6 @@ const insertMongoMessage = async function (messageObj) {
       body: JSON.stringify(messageObj),
     };
 
-    socket.emit('message', messageObj);
     await fetch(url, options);
   } catch (err) {
     console.log(err);
@@ -76,15 +75,12 @@ const syncMessages = function () {
 
     request.onsuccess = () => {
       request.result.forEach(obj => {
-        socket.emit('joinRoom', obj.id);
-
         obj.messages.forEach(messageObj => {
           insertMongoMessage({ id: obj.id, ...messageObj });
         });
 
         objectStore.delete(obj.id);
       });
-      // location.reload();
     };
   };
 };

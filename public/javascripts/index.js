@@ -27,7 +27,7 @@ if (navigator.geolocation) {
     <div class="plants-section">
         <h1>Closest Plants</h1>
         <div class="entries">
-        ${thisfunction(closestPlants)}
+        ${displayClosestPlantsHTML(closestPlants)}
         </div>
     </div>`;
 
@@ -35,7 +35,7 @@ if (navigator.geolocation) {
   });
 }
 
-const thisfunction = function (plants) {
+const displayClosestPlantsHTML = function (plants) {
   let html = '';
 
   plants.forEach(plant => {

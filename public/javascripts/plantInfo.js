@@ -77,6 +77,7 @@ form.addEventListener('submit', e => {
     }
 
     input.value = '';
+    socket.emit('message', messageObj);
     insertHTMLMessage(messageObj);
 
     syncMessagesLater();
@@ -95,8 +96,6 @@ async function syncMessagesLater() {
 const insertHTMLMessage = function (messageObj) {
   const { message, userNickname, date } = messageObj;
 
-  console.log(messageObj);
-
   const currentTime = new Date(date).toLocaleDateString('en-uk', {
     minute: 'numeric',
     hour: 'numeric',
@@ -110,29 +109,15 @@ const insertHTMLMessage = function (messageObj) {
   messageBox.scrollTo(0, messageBox.scrollHeight);
 };
 
-const insertMongoMessage = async function (messageObj) {
-  try {
-    const url = '/newMessage';
-    const options = {
-      method: 'PUT',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: plantInformation._id,
-        ...messageObj,
-      }),
-    };
-
-    socket.emit('message', messageObj);
-    await fetch(url, options);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 socket.on('message', arg => {
-  insertHTMLMessage(arg);
+  if (
+    !(
+      messageBox.lastElementChild.firstElementChild.innerText ===
+      `${arg.userNickname}: ${arg.message}`
+    )
+  ) {
+    insertHTMLMessage(arg);
+  }
 });
 
 //////////// Edit Button

@@ -205,6 +205,7 @@ exports.newMessage = async (req, res) => {
 
     res.status(200).send('Message added to database');
   } catch (err) {
+    console.log(err);
     res.status(500).send('An error occured');
   }
 };

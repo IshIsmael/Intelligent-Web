@@ -8,6 +8,10 @@ const comments = document.querySelector('.comments');
 
 let dbentry;
 
+window.addEventListener('online', () => {
+  window.location.href = '/forum';
+});
+
 sightingIndexedDB.onsuccess = event => {
   const db = event.target.result;
 

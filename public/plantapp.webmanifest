@@ -2,7 +2,6 @@
   "name": "Plant App",
   "short_name": "Plant",
   "description": "PWA for Plant App.",
-
   "icons": [
     {
       "src": "/images/pwa/SmallTile.scale-100.png",
@@ -328,5 +327,6 @@
   "start_url": "../views/index.ejs",
   "display": "fullscreen",
   "theme_color": "#B12A34",
-  "background_color": "#B12A34"
+  "background_color": "#B12A34",
+  "type": "module"
 }
