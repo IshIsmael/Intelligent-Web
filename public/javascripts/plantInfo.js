@@ -117,8 +117,8 @@ const insertHTMLMessage = function (messageObj) {
 socket.on('message', arg => {
   if (
     !(
-      messageBox.lastElementChild.firstElementChild.innerText ===
-      `${arg.userNickname}: ${arg.message}`
+      messageBox.lastElementChild.firstElementChild.innerText.trim() ===
+      `${arg.userNickname}: ${arg.message.trim()}`
     )
   ) {
     insertHTMLMessage(arg);
